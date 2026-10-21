@@ -32,6 +32,7 @@ import CommercialNavEntry from './components/CommercialNavEntry.vue'
 import BlogTierCards from './components/BlogTierCards.vue'
 import GuideSidebarSearch from './components/GuideSidebarSearch.vue'
 import GuideFloatingSearch from './components/GuideFloatingSearch.vue'
+import DocumentationHub from './components/DocumentationHub.vue'
 
 const supportedLocales = ['ar', 'be', 'de', 'en', 'es', 'fr', 'it', 'jp', 'kk', 'ko', 'pl', 'ru', 'uk', 'zh-TW', 'zh']
 
@@ -120,5 +121,6 @@ export default {
     app.component('AppOptifinePicture', AppOptifinePicture)
     app.component('AppLabymodPicture', AppLabymodPicture)
     app.component('LogViewer', LogViewer)
+    app.component('DocumentationHub', DocumentationHub)
   },
 }
