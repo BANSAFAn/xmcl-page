@@ -404,3 +404,9 @@ html.dark body:has(.blog-article-wrapper) .VPDocAsideOutline .outline-link:hover
 html.dark body:has(.blog-article-wrapper) .VPDocAsideOutline .outline-link.active {
   color: var(--xmcl-lime);
 }
+
+@media (min-width: 960px) {
+  .has-sidebar .site-footer {
+    padding-left: calc(var(--vp-sidebar-width, 272px) + clamp(24px, 4vw, 64px)) !important;
+  }
+}

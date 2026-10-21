@@ -192,10 +192,30 @@ const blocks = computed<DocBlock[]>(() => {
         accentColor: '#f59e0b',
         items: [
           {
-            title: 'Core Document (Документація ядра лаунчера)',
-            desc: 'Повний API довідник модулів ядра @xmcl/core: завантаження, автентифікація, запуск',
+            title: 'Core Document (Огляд та архітектура ядра)',
+            desc: 'Повний API довідник модулів ядра @xmcl/core: архітектура, завантаження, запуск',
             link: '/en/core/',
             badge: 'Ядро API',
+          },
+          {
+            title: '📦 @xmcl/installer (Встановлення версій та модів)',
+            desc: 'Модуль встановлення чистих версій Minecraft, завантажувачів Forge, Fabric та Java',
+            link: '/en/core/installer',
+          },
+          {
+            title: '📦 @xmcl/core (Ядро запуску та інстанси)',
+            desc: 'Керування процесом гри, запуск JVM, конфігурація пам’яті та діагностика',
+            link: '/en/core/core',
+          },
+          {
+            title: '📦 @xmcl/client & P2P (Мережа та LAN)',
+            desc: 'Мережеві клієнти, P2P пряме підключення, пінг серверів та пошук у локальній мережі',
+            link: '/en/core/client',
+          },
+          {
+            title: '📦 @xmcl/mod-parser (Аналізатор файлів модів)',
+            desc: 'Зчитування JAR файлів модів, метаданих Forge/Fabric/Quilt та залежностей',
+            link: '/en/core/mod-parser',
           },
           {
             title: 'Специфікація P2P протоколів',
@@ -341,10 +361,30 @@ const blocks = computed<DocBlock[]>(() => {
       accentColor: '#f59e0b',
       items: [
         {
-          title: 'Core Document (Launcher Core Docs)',
-          desc: 'Full API documentation for @xmcl/core: downloads, auth, launch lifecycle',
+          title: 'Core Document (Overview & Launcher Core Docs)',
+          desc: 'Full API documentation for @xmcl/core: architecture, auth, launch lifecycle',
           link: '/en/core/',
           badge: 'Core API',
+        },
+        {
+          title: '📦 @xmcl/installer (Version & Mod Installation)',
+          desc: 'Install vanilla Minecraft, Forge, Fabric, NeoForge modloaders, and Java runtimes',
+          link: '/en/core/installer',
+        },
+        {
+          title: '📦 @xmcl/core (Launch Process & Core Types)',
+          desc: 'Process lifecycle, JVM arguments, launch options, and instance diagnostics',
+          link: '/en/core/core',
+        },
+        {
+          title: '📦 @xmcl/client & P2P (Network Client)',
+          desc: 'Network protocol clients, direct P2P connections, LAN discovery, and server pings',
+          link: '/en/core/client',
+        },
+        {
+          title: '📦 @xmcl/mod-parser (Mod JAR Analyzer)',
+          desc: 'Parse mod JARs, read mod manifests, dependencies, and metadata',
+          link: '/en/core/mod-parser',
         },
         {
           title: 'P2P Online Protocols Explained',

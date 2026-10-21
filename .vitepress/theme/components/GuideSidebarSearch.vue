@@ -19,21 +19,21 @@ const isDoc = computed(() => {
 const placeholder = computed(() => {
   const currentLang = (lang.value || 'en').toLowerCase()
   if (currentLang.startsWith('uk')) {
-    return 'Пошук у документації...'
+    return 'Пошук...'
   }
   if (currentLang.startsWith('zh')) {
     return '搜索文档...'
   }
   if (currentLang.startsWith('de')) {
-    return 'Dokumentation suchen...'
+    return 'Suchen...'
   }
   if (currentLang.startsWith('fr')) {
     return 'Rechercher...'
   }
   if (currentLang.startsWith('ru')) {
-    return 'Поиск по документации...'
+    return 'Поиск...'
   }
-  return 'Search documentation...'
+  return 'Search docs...'
 })
 </script>
 
