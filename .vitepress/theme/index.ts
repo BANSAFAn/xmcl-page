@@ -30,7 +30,6 @@ import SiteFooter from './components/SiteFooter.vue'
 import ImageZoomLightbox from './components/ImageZoomLightbox.vue'
 import CommercialNavEntry from './components/CommercialNavEntry.vue'
 import BlogTierCards from './components/BlogTierCards.vue'
-import GuideSidebarSearch from './components/GuideSidebarSearch.vue'
 import GuideFloatingSearch from './components/GuideFloatingSearch.vue'
 import DocumentationHub from './components/DocumentationHub.vue'
 
@@ -93,7 +92,6 @@ export default {
       h(DefaultTheme.Layout, props, {
         'nav-bar-content-after': () => h(CommercialNavEntry),
         'layout-bottom': () => [h(SiteFooter), h(ImageZoomLightbox), h(GuideFloatingSearch)],
-        'sidebar-nav-before': () => h(GuideSidebarSearch),
       }),
     ]
   }),

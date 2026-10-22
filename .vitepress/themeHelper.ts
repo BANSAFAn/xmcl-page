@@ -120,57 +120,120 @@ export function loadTheme(location: string, locale: string) {
         'i18n.md',
     ]
 
+    const guideShortTitles: Record<string, Record<string, string>> = {
+        uk: {
+            'install.md': 'Встановлення',
+            'update.md': 'Оновлення',
+            'offline-mode.md': 'Офлайн-режим',
+            'microsoft-login-issues.md': 'Вхід Microsoft',
+            'change-drive.md': 'Зміна диска',
+            'appx-migrate.md': 'Міграція AppX',
+            'manage.md': 'Керування сховищем',
+            'modloader.md': 'Завантажувачі модів',
+            'appearance.md': 'Оформлення та CSS',
+            'custom-skins.md': 'Кастомні скіни',
+            'agnes-ai-setup.md': 'Agnes AI помічник',
+            'bedrock.md': 'Bedrock Edition',
+            'together.md': 'XMCL Together',
+            'p2p.md': 'Мережа P2P (LAN)',
+            'troubleshooting.md': 'Діагностика та збої',
+            'contributing.md': 'Участь у розробці',
+            'i18n.md': 'Локалізація (i18n)',
+        },
+        en: {
+            'install.md': 'Installation',
+            'update.md': 'Updates',
+            'offline-mode.md': 'Offline Mode',
+            'microsoft-login-issues.md': 'Microsoft Login',
+            'change-drive.md': 'Change Drive',
+            'appx-migrate.md': 'AppX Migration',
+            'manage.md': 'Storage & Instances',
+            'modloader.md': 'Modloaders',
+            'appearance.md': 'Appearance & CSS',
+            'custom-skins.md': 'Custom Skins',
+            'agnes-ai-setup.md': 'Agnes AI Assistant',
+            'bedrock.md': 'Bedrock Edition',
+            'together.md': 'XMCL Together',
+            'p2p.md': 'P2P LAN Multiplayer',
+            'troubleshooting.md': 'Crash Diagnostics & Logs',
+            'contributing.md': 'Contributing Guide',
+            'i18n.md': 'Localization (i18n)',
+        },
+    }
+
+    const resolveItemText = (file: string, fallback: string) => {
+        const localeDict = guideShortTitles[locale] || guideShortTitles.en
+        return localeDict?.[file] || fallback
+    }
+
     const guideMap = new Map(guideSection.map(item => [item.file, item]))
-    const gettingStartedItems = gettingStartedFiles.map(f => guideMap.get(f)).filter((v): v is { file: string; text: string; link: string } => !!v)
-    const gameAndModsItems = gameAndModsFiles.map(f => guideMap.get(f)).filter((v): v is { file: string; text: string; link: string } => !!v)
-    const multiplayerItems = multiplayerFiles.map(f => guideMap.get(f)).filter((v): v is { file: string; text: string; link: string } => !!v)
+    const gettingStartedItems = gettingStartedFiles.map(f => {
+        const item = guideMap.get(f)
+        return item ? { text: resolveItemText(f, item.text), link: item.link } : null
+    }).filter((v): v is { text: string; link: string } => !!v)
+
+    const gameAndModsItems = gameAndModsFiles.map(f => {
+        const item = guideMap.get(f)
+        return item ? { text: resolveItemText(f, item.text), link: item.link } : null
+    }).filter((v): v is { text: string; link: string } => !!v)
+
+    const multiplayerItems = multiplayerFiles.map(f => {
+        const item = guideMap.get(f)
+        return item ? { text: resolveItemText(f, item.text), link: item.link } : null
+    }).filter((v): v is { text: string; link: string } => !!v)
 
     const coreAndDevItems: DefaultTheme.SidebarItem[] = [
-        { text: '⚡ ' + (localeMessages.coreDocument || 'Core Document (Overview)'), link: '/en/core/' }
+        { text: (localeMessages.coreDocument || 'Core Document') + ' (Overview)', link: '/en/core/' }
     ]
     if (protocolSection.length > 0) {
-        coreAndDevItems.push({ text: '🤝 ' + (localeMessages.protocol || 'Protocol (P2P)'), link: `/${locale}/protocol/p2p` })
+        coreAndDevItems.push({ text: localeMessages.protocol || 'Protocol (P2P)', link: `/${locale}/protocol/p2p` })
     }
     for (const f of coreAndDevFiles) {
         const item = guideMap.get(f)
-        if (item) coreAndDevItems.push({ text: item.text, link: item.link })
+        if (item) coreAndDevItems.push({ text: resolveItemText(f, item.text), link: item.link })
     }
 
     if (corePackages.length > 0) {
         coreAndDevItems.push({
-            text: '📦 ' + (locale === 'uk' ? 'Модулі ядра (@xmcl/*)' : 'Core Packages (@xmcl/*)'),
+            text: locale === 'uk' ? 'Модулі ядра (@xmcl/*)' : 'Core Packages (@xmcl/*)',
             collapsed: true,
             items: corePackages
         })
     }
 
     const docGroups = localeMessages.docGroups || {}
-    const commonSidebar: DefaultTheme.SidebarItem[] = []
+    const hubLabel = locale === 'uk' ? 'Центр документації' : (localeMessages.documentation || 'Documentation Hub')
+    const commonSidebar: DefaultTheme.SidebarItem[] = [
+        {
+            text: hubLabel,
+            link: `/${locale}/guide/`
+        }
+    ]
 
     if (gettingStartedItems.length > 0) {
         commonSidebar.push({
-            text: docGroups.gettingStarted || '🚀 Getting Started',
+            text: docGroups.gettingStarted || '01 / Getting Started',
             collapsed: false,
-            items: gettingStartedItems.map(item => ({ text: item.text, link: item.link }))
+            items: gettingStartedItems
         })
     }
     if (gameAndModsItems.length > 0) {
         commonSidebar.push({
-            text: docGroups.gameAndMods || '🎮 Game & Mods',
+            text: docGroups.gameAndMods || '02 / Game & Mods',
             collapsed: false,
-            items: gameAndModsItems.map(item => ({ text: item.text, link: item.link }))
+            items: gameAndModsItems
         })
     }
     if (multiplayerItems.length > 0) {
         commonSidebar.push({
-            text: docGroups.multiplayerAndTroubleshooting || '🌐 Multiplayer & Diagnostics',
+            text: docGroups.multiplayerAndTroubleshooting || '03 / Multiplayer & Diagnostics',
             collapsed: false,
-            items: multiplayerItems.map(item => ({ text: item.text, link: item.link }))
+            items: multiplayerItems
         })
     }
     if (coreAndDevItems.length > 0) {
         commonSidebar.push({
-            text: docGroups.coreAndDev || '🛠️ Architecture & Core',
+            text: docGroups.coreAndDev || '04 / Architecture & Core',
             collapsed: false,
             items: coreAndDevItems
         })
@@ -185,7 +248,7 @@ export function loadTheme(location: string, locale: string) {
     if (changelogFiles.length > 0) {
         const changelogsSidebar = [
             {
-                text: '📜 ' + localeMessages.changelogs,
+                text: localeMessages.changelogs,
                 items: changelogFiles.map(f => ({ text: f, link: `/${locale}/changelogs/${f}` }))
             }
         ]
@@ -223,7 +286,7 @@ export function loadTheme(location: string, locale: string) {
             nav,
             sidebar,
             outline: {
-                label: '📚 ' + localeMessages.outline,
+                label: localeMessages.outline,
                 level: [2, 3],
             },
             darkModeSwitchLabel: localeMessages.darkModeSwitchLabel,

@@ -48,10 +48,10 @@ docHub:
   githubRepo: Репозиторій GitHub
   contributeDocs: Запропонувати правку
 docGroups:
-  gettingStarted: "🚀 Початок роботи"
-  gameAndMods: "🎮 Керування грою та моди"
-  multiplayerAndTroubleshooting: "🌐 Мультиплеєр та діагностика"
-  coreAndDev: "🛠️ Архітектура та розробка"
+  gettingStarted: "01 / Початок роботи"
+  gameAndMods: "02 / Керування грою та моди"
+  multiplayerAndTroubleshooting: "03 / Мультиплеєр та діагностика"
+  coreAndDev: "04 / Архітектура та ядро"
 protocol: Протокол
 changelogs: Список змін
 blogs: Блог

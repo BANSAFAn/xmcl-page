@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useData } from 'vitepress'
 import { openSearchModal } from '../composables/useSearchModal'
 
-const { lang } = useData()
+const { lang, isDark } = useData()
 const isMac = ref(false)
 
 onMounted(() => {
@@ -11,44 +11,12 @@ onMounted(() => {
 })
 
 const isUk = computed(() => (lang.value || 'en').toLowerCase().startsWith('uk'))
+const isZh = computed(() => (lang.value || 'en').toLowerCase().startsWith('zh'))
 const currentLocale = computed(() => lang.value || 'en')
 
-const kicker = computed(() => isUk.value ? 'Офіційний хаб документації' : 'Official Documentation')
-const title = computed(() => isUk.value ? 'Центр документації XMCL' : 'XMCL Documentation Hub')
-const subtitle = computed(() => 
-  isUk.value 
-    ? 'Все про встановлення, налаштування модів, мережеву гру, вирішення проблем та архітектуру ядра лаунчера.' 
-    : 'Everything you need to install, manage mods, play multiplayer, troubleshoot, and explore the launcher architecture.'
-)
-const searchPlaceholder = computed(() => 
-  isUk.value ? 'Пошук у всій документації (натисніть або Ctrl+K)...' : 'Search all documentation (click or Ctrl+K)...'
-)
-
-const quickChips = computed(() => {
-  const loc = currentLocale.value
-  if (isUk.value) {
-    return [
-      { text: '📥 Встановлення', link: `/${loc}/guide/install` },
-      { text: '⚙️ Forge & Fabric', link: `/${loc}/guide/modloader` },
-      { text: '🤝 XMCL Together', link: `/${loc}/guide/together` },
-      { text: '📡 Мережа P2P', link: `/${loc}/guide/p2p` },
-      { text: '🎨 Скіни & CSS', link: `/${loc}/guide/appearance` },
-      { text: '⚡ Core Document', link: '/en/core/' },
-      { text: '🛠️ Вирішення проблем', link: `/${loc}/guide/troubleshooting` },
-    ]
-  }
-  return [
-    { text: '📥 Installation', link: `/${loc}/guide/install` },
-    { text: '⚙️ Modloaders', link: `/${loc}/guide/modloader` },
-    { text: '🤝 Together', link: `/${loc}/guide/together` },
-    { text: '📡 P2P LAN', link: `/${loc}/guide/p2p` },
-    { text: '🎨 Skins & CSS', link: `/${loc}/guide/appearance` },
-    { text: '⚡ Core Document', link: '/en/core/' },
-    { text: '🛠️ Troubleshooting', link: `/${loc}/guide/troubleshooting` },
-  ]
-})
-
 interface DocItem {
+  id: string
+  index: string
   title: string
   desc: string
   link: string
@@ -58,13 +26,49 @@ interface DocItem {
 interface DocBlock {
   id: string
   number: string
+  code: string
   kicker: string
   title: string
   desc: string
-  icon: string
+  status: string
   accentColor: string
   items: DocItem[]
 }
+
+const quickFlags = computed(() => {
+  const loc = currentLocale.value
+  if (isUk.value) {
+    return [
+      { flag: '--install', label: 'Встановлення', link: `/${loc}/guide/install` },
+      { flag: '--modloaders', label: 'Forge / Fabric', link: `/${loc}/guide/modloader` },
+      { flag: '--together', label: 'Хмарна гра', link: `/${loc}/guide/together` },
+      { flag: '--p2p-lan', label: 'Мережа P2P', link: `/${loc}/guide/p2p` },
+      { flag: '--custom-skins', label: 'Скіни Ely.by', link: `/${loc}/guide/custom-skins` },
+      { flag: '--core-api', label: 'Core Document', link: '/en/core/' },
+      { flag: '--diagnostics', label: 'Краш-логи', link: `/${loc}/guide/troubleshooting` },
+    ]
+  }
+  if (isZh.value) {
+    return [
+      { flag: '--install', label: '安装指南', link: `/${loc}/guide/install` },
+      { flag: '--modloaders', label: 'Forge / Fabric', link: `/${loc}/guide/modloader` },
+      { flag: '--together', label: 'XMCL 联机', link: `/${loc}/guide/together` },
+      { flag: '--p2p-lan', label: 'P2P 局域网', link: `/${loc}/guide/p2p` },
+      { flag: '--custom-skins', label: '自定义皮肤', link: `/${loc}/guide/custom-skins` },
+      { flag: '--core-api', label: '核心架构文档', link: '/en/core/' },
+      { flag: '--diagnostics', label: '故障排查', link: `/${loc}/guide/troubleshooting` },
+    ]
+  }
+  return [
+    { flag: '--install', label: 'Installation', link: `/${loc}/guide/install` },
+    { flag: '--modloaders', label: 'Forge / Fabric', link: `/${loc}/guide/modloader` },
+    { flag: '--together', label: 'Together Cloud', link: `/${loc}/guide/together` },
+    { flag: '--p2p-lan', label: 'P2P Network', link: `/${loc}/guide/p2p` },
+    { flag: '--custom-skins', label: 'Custom Skins', link: `/${loc}/guide/custom-skins` },
+    { flag: '--core-api', label: 'Core Document', link: '/en/core/' },
+    { flag: '--diagnostics', label: 'Crash Diagnostics', link: `/${loc}/guide/troubleshooting` },
+  ]
+})
 
 const blocks = computed<DocBlock[]>(() => {
   const loc = currentLocale.value
@@ -72,165 +76,233 @@ const blocks = computed<DocBlock[]>(() => {
     return [
       {
         id: 'getting-started',
-        number: '01',
-        kicker: 'ОСНОВИ',
+        number: '01 / 04',
+        code: 'SYS_INIT',
+        kicker: 'ІНІЦІАЛІЗАЦІЯ СИСТЕМИ',
         title: 'Початок роботи',
-        desc: 'Швидкий старт з XMCL: встановлення на Windows, macOS та Linux, вхід Microsoft, офлайн-режим та перенесення даних.',
-        icon: '🚀',
+        desc: 'Повний цикл розгортання XMCL: мультіплатформне встановлення, автентифікація Microsoft, офлайн-профілі та міграція даних без втрат.',
+        status: 'READY // V0.56+',
         accentColor: '#c9f85a',
         items: [
           {
-            title: 'Інструкція з встановлення',
-            desc: 'Windows (Installer/Portable), macOS, Linux (Flathub, AppImage) та Steam Deck',
+            id: 'install',
+            index: '01.1',
+            title: 'Посібник зі встановлення',
+            desc: 'Пакунки для Windows (Installer / Portable), macOS, Linux (AppImage, Flathub) та Steam Deck',
             link: `/${loc}/guide/install`,
-            badge: 'Важливо',
+            badge: 'CRITICAL',
           },
           {
-            title: 'Оновлення XMCL',
-            desc: 'Автоматичне оновлення версій та ручне встановлення нових релізів',
+            id: 'update',
+            index: '01.2',
+            title: 'Оновлення лаунчера',
+            desc: 'Механізм автоматичного оновлення каналів релізів та ручне оновлення білдів',
             link: `/${loc}/guide/update`,
+            badge: 'UPDATE',
           },
           {
-            title: 'Гра без ліцензії (Офлайн-режим)',
-            desc: 'Створення офлайн-профілів та гра без акаунта Microsoft',
+            id: 'offline-mode',
+            index: '01.3',
+            title: 'Офлайн-режим (Без ліцензії)',
+            desc: 'Локальні ізольовані профілі без авторизації в серверах Microsoft',
             link: `/${loc}/guide/offline-mode`,
+            badge: 'OFFLINE',
           },
           {
-            title: 'Проблеми зі входом через Microsoft',
-            desc: 'Розмежування Bedrock vs Java, виправлення помилок ліцензії та авторизації',
+            id: 'microsoft-login',
+            index: '01.4',
+            title: 'Автентифікація Microsoft',
+            desc: 'Вирішення помилок доступу, розмежування Bedrock / Java та відновлення токенів OAuth',
             link: `/${loc}/guide/microsoft-login-issues`,
+            badge: 'AUTH',
           },
           {
-            title: 'Переміщення XMCL на інший диск',
-            desc: 'Як перенести дані гри та лаунчера і звільнити місце на системному диску C:',
+            id: 'change-drive',
+            index: '01.5',
+            title: 'Перенесення даних на інший диск',
+            desc: 'Безпечне переміщення кореневого каталогу та звільнення місця на системному диску',
             link: `/${loc}/guide/change-drive`,
+            badge: 'STORAGE',
           },
           {
-            title: 'Міграція AppX',
-            desc: 'Безпечний перехід зі старого формату пакунків Windows Store без втрати файлів',
+            id: 'appx-migrate',
+            index: '01.6',
+            title: 'Міграція старих AppX пакунків',
+            desc: 'Конвертація даних з формату Windows Store до сучасних автономних інсталяцій',
             link: `/${loc}/guide/appx-migrate`,
+            badge: 'MIGRATE',
           },
         ],
       },
       {
         id: 'game-mods',
-        number: '02',
-        kicker: 'КОНФІГУРАЦІЯ',
+        number: '02 / 04',
+        code: 'RUNTIME_ENG',
+        kicker: 'КОНФІГУРАЦІЯ СЕРЕДОВИЩА',
         title: 'Керування грою та моди',
-        desc: 'Завантажувачі Forge, Fabric, NeoForge, кастомізація UI, теми, власні скіни та розумний помічник Agnes AI.',
-        icon: '🎮',
+        desc: 'Конфігурація завантажувачів модифікацій, ізоляція інстансів, кастомізація UI через темний CSS, скіни та асистент Agnes AI.',
+        status: 'LOADED // MODULAR',
         accentColor: '#4ade80',
         items: [
           {
-            title: 'Що таке завантажувач модів',
-            desc: 'Порівняння та встановлення Forge, Fabric, Quilt, NeoForge та OptiFine',
+            id: 'modloaders',
+            index: '02.1',
+            title: 'Завантажувачі модів',
+            desc: 'Встановлення та сумісність Forge, Fabric, Quilt, NeoForge та OptiFine',
             link: `/${loc}/guide/modloader`,
-            badge: 'Моди',
+            badge: 'MODLOADER',
           },
           {
-            title: 'Налаштування вигляду та CSS',
-            desc: 'Зміна тем оформлення, фонових зображень, прозорості та кастомних CSS-стилів',
+            id: 'appearance',
+            index: '02.2',
+            title: 'Оформлення та кастомний CSS',
+            desc: 'Глибока кастомізація інтерфейсу, теми, прозорість та власні таблиці стилів CSS',
             link: `/${loc}/guide/appearance`,
+            badge: 'UI_CUSTOM',
           },
           {
-            title: 'Посібник з кастомних скінів',
-            desc: 'Безкоштовна інтеграція скінів та плащів через Ely.by та LittleSkin',
+            id: 'custom-skins',
+            index: '02.3',
+            title: 'Сторонні системи скінів',
+            desc: 'Підключення кастомних скінів та плащів через Ely.by та LittleSkin API',
             link: `/${loc}/guide/custom-skins`,
+            badge: 'SKINS',
           },
           {
+            id: 'agnes-ai',
+            index: '02.4',
             title: 'Налаштування Agnes AI',
-            desc: 'Підключення розумного AI-помічника прямо всередині вашого лаунчера',
+            desc: 'Інтеграція вбудованого інтелектуального помічника прямо в робочий простір лаунчера',
             link: `/${loc}/guide/agnes-ai-setup`,
+            badge: 'AI_AGENT',
           },
           {
-            title: 'Управління даними та сховищем',
-            desc: 'Як XMCL організовує інстанси, ізоляцію модів та сховище файлів',
+            id: 'manage-storage',
+            index: '02.5',
+            title: 'Ізоляція даних та інстанси',
+            desc: 'Як XMCL керує спільним пулом ресурсів, жорсткими посиланнями та версіями гри',
             link: `/${loc}/guide/manage`,
+            badge: 'INSTANCES',
           },
           {
+            id: 'bedrock',
+            index: '02.6',
             title: 'Minecraft Bedrock Edition',
-            desc: 'Підтримка та запуск Bedrock видання поруч із версіями Java',
+            desc: 'Запуск та підтримка Bedrock поруч із версіями Java в єдиному середовищі',
             link: `/${loc}/guide/bedrock`,
+            badge: 'BEDROCK',
           },
         ],
       },
       {
         id: 'multiplayer',
-        number: '03',
-        kicker: 'МУЛЬТИПЛЕЄР',
+        number: '03 / 04',
+        code: 'NET_P2P',
+        kicker: 'МЕРЕЖЕВИЙ СТЕК ТА ДІАГНОСТИКА',
         title: 'Спільна гра та діагностика',
-        desc: 'Грайте з друзями онлайн без білого IP, налаштовуйте пряме P2P підключення та виправляйте будь-які збої або краші.',
-        icon: '🌐',
+        desc: 'Децентралізована мережева гра без білої IP-адреси, аналітика JVM-логів та швидка діагностика збоїв і конфліктів модів.',
+        status: 'CONNECT // ONLINE',
         accentColor: '#38bdf8',
         items: [
           {
+            id: 'together',
+            index: '03.1',
             title: 'XMCL Together: Хмарний мультиплеєр',
-            desc: 'Швидка спільна гра з друзями в 1 клік, оренда серверів та налаштування кімнат',
+            desc: 'Спільна мережева гра в 1 клік, спільні сервери та управління сесіями без налаштування роутера',
             link: `/${loc}/guide/together`,
-            badge: 'Together',
+            badge: 'TOGETHER',
           },
           {
-            title: 'Посібник з мережевої гри P2P (LAN)',
-            desc: 'Безкоштовне пряме з’єднання гравців без публічної IP-адреси та сторонніх програм',
+            id: 'p2p',
+            index: '03.2',
+            title: 'Пряма мережева гра P2P (LAN)',
+            desc: 'Пряме тунелювання трафіку між комп’ютерами без проміжних серверів та сторонніх утиліт',
             link: `/${loc}/guide/p2p`,
+            badge: 'P2P_MESH',
           },
           {
-            title: 'Вирішення проблем із запуском та збоями',
-            desc: 'Аналіз краш-логів, вирішення несумісності Java, драйверів відеокарти та модів',
+            id: 'troubleshooting',
+            index: '03.3',
+            title: 'Діагностика збоїв та краш-логи',
+            desc: 'Аналіз журналів JVM, помилок драйверів відеокарти та виявлення несумісних модів',
             link: `/${loc}/guide/troubleshooting`,
-            badge: 'Діагностика',
+            badge: 'FORENSICS',
           },
         ],
       },
       {
         id: 'architecture-core',
-        number: '04',
-        kicker: 'ЯДРО ТА РОЗРОБКА',
-        title: 'Базова документація ядра та розробка',
-        desc: 'Офіційна технічна документація ядра лаунчера (Core Document), відкриті мережеві протоколи та участь у розробці.',
-        icon: '🛠️',
-        accentColor: '#f59e0b',
+        number: '04 / 04',
+        code: 'CORE_SPEC',
+        kicker: 'СПЕЦИФІКАЦІЯ ЯДРА ТА МОДУЛІ',
+        title: 'Базова документація ядра та API',
+        desc: 'Повна технічна документація модулів ядра @xmcl/*: запуск процесів JVM, мережевий протокол P2P, розробка та i18n.',
+        status: 'SOURCE // TYPESCRIPT',
+        accentColor: '#ff8060',
         items: [
           {
-            title: 'Core Document (Огляд та архітектура ядра)',
-            desc: 'Повний API довідник модулів ядра @xmcl/core: архітектура, завантаження, запуск',
+            id: 'core-overview',
+            index: '04.1',
+            title: 'Core Document (Огляд архітектури)',
+            desc: 'Генеральна специфікація та архітектура екосистеми модулів ядра @xmcl/*',
             link: '/en/core/',
-            badge: 'Ядро API',
+            badge: 'CORE_API',
           },
           {
-            title: '📦 @xmcl/installer (Встановлення версій та модів)',
-            desc: 'Модуль встановлення чистих версій Minecraft, завантажувачів Forge, Fabric та Java',
+            id: 'core-installer',
+            index: '04.2',
+            title: '@xmcl/installer (Модуль встановлення)',
+            desc: 'Автоматизоване завантаження та встановлення версій Minecraft, Forge, Fabric та Java',
             link: '/en/core/installer',
+            badge: 'PACKAGE',
           },
           {
-            title: '📦 @xmcl/core (Ядро запуску та інстанси)',
-            desc: 'Керування процесом гри, запуск JVM, конфігурація пам’яті та діагностика',
+            id: 'core-core',
+            index: '04.3',
+            title: '@xmcl/core (Ядро запуску JVM)',
+            desc: 'Керування процесами, аргументи JVM, запуск інстансів та конфігурація середовища',
             link: '/en/core/core',
+            badge: 'PACKAGE',
           },
           {
-            title: '📦 @xmcl/client & P2P (Мережа та LAN)',
-            desc: 'Мережеві клієнти, P2P пряме підключення, пінг серверів та пошук у локальній мережі',
+            id: 'core-client',
+            index: '04.4',
+            title: '@xmcl/client (Мережевий клієнт)',
+            desc: 'P2P підключення, виявлення серверів у LAN, сигнальні протоколи та пінг',
             link: '/en/core/client',
+            badge: 'PACKAGE',
           },
           {
-            title: '📦 @xmcl/mod-parser (Аналізатор файлів модів)',
-            desc: 'Зчитування JAR файлів модів, метаданих Forge/Fabric/Quilt та залежностей',
+            id: 'core-mod-parser',
+            index: '04.5',
+            title: '@xmcl/mod-parser (Аналізатор модів)',
+            desc: 'Вилучення метаданих з JAR-файлів, аналіз маніфестів Forge, Fabric та Quilt',
             link: '/en/core/mod-parser',
+            badge: 'PACKAGE',
           },
           {
-            title: 'Специфікація P2P протоколів',
-            desc: 'Технічний опис децентралізованих протоколів передачі даних та з’єднання',
+            id: 'p2p-protocol',
+            index: '04.6',
+            title: 'Специфікація протоколів P2P',
+            desc: 'Формати повідомлень, сигналізація через STUN/TURN та безпека передачі пакетів',
             link: `/${loc}/protocol/p2p`,
+            badge: 'PROTOCOL',
           },
           {
+            id: 'contributing',
+            index: '04.7',
             title: 'Посібник розробника (Contributing)',
-            desc: 'Як налаштувати оточення розробки, запустити лаунчер з коду та створити Pull Request',
+            desc: 'Налаштування оточення, локальна компіляція проекту та оформлення Pull Request',
             link: `/${loc}/guide/contributing`,
+            badge: 'DEV_GUIDE',
           },
           {
+            id: 'i18n',
+            index: '04.8',
             title: 'Локалізація та переклад (i18n)',
-            desc: 'Додавання та вдосконалення перекладів лаунчера вашою рідною мовою',
+            desc: 'Додавання та синхронізація словників перекладу лаунчера вашою рідною мовою',
             link: `/${loc}/guide/i18n`,
+            badge: 'LOCALIZATION',
           },
         ],
       },
@@ -241,165 +313,233 @@ const blocks = computed<DocBlock[]>(() => {
   return [
     {
       id: 'getting-started',
-      number: '01',
-      kicker: 'ESSENTIALS',
+      number: '01 / 04',
+      code: 'SYS_INIT',
+      kicker: 'SYSTEM INITIALIZATION',
       title: 'Getting Started',
-      desc: 'Quick start with XMCL: installation across Windows, macOS and Linux, Microsoft login, offline mode, and data migration.',
-      icon: '🚀',
+      desc: 'Complete XMCL deployment lifecycle: cross-platform installation, Microsoft authentication, offline profiles, and storage migration.',
+      status: 'READY // V0.56+',
       accentColor: '#c9f85a',
       items: [
         {
+          id: 'install',
+          index: '01.1',
           title: 'Installation Guide',
-          desc: 'Windows (Installer/Portable), macOS, Linux (Flathub, AppImage) & Steam Deck',
+          desc: 'Windows (Installer / Portable), macOS, Linux (AppImage, Flathub) & Steam Deck',
           link: `/${loc}/guide/install`,
-          badge: 'Essential',
+          badge: 'CRITICAL',
         },
         {
-          title: 'Update Guide',
-          desc: 'Automatic version updates and manual release installations',
+          id: 'update',
+          index: '01.2',
+          title: 'Update Mechanisms',
+          desc: 'Automated release channel updates and manual artifact deployment',
           link: `/${loc}/guide/update`,
+          badge: 'UPDATE',
         },
         {
-          title: 'Playing Without a License (Offline Mode)',
-          desc: 'Creating offline profiles and playing without a Microsoft account',
+          id: 'offline-mode',
+          index: '01.3',
+          title: 'Playing Offline (No License)',
+          desc: 'Independent local profiles operational without Microsoft authentication servers',
           link: `/${loc}/guide/offline-mode`,
+          badge: 'OFFLINE',
         },
         {
-          title: 'Microsoft Login & License Issues',
-          desc: 'Bedrock vs Java distinction, account authorization and license troubleshooting',
+          id: 'microsoft-login',
+          index: '01.4',
+          title: 'Microsoft Authentication & Licenses',
+          desc: 'Resolving authorization failures, Java vs Bedrock scope, and OAuth refresh tokens',
           link: `/${loc}/guide/microsoft-login-issues`,
+          badge: 'AUTH',
         },
         {
-          title: 'How to Move XMCL to Another Drive',
-          desc: 'Transfer game files and launcher data away from the C: drive',
+          id: 'change-drive',
+          index: '01.5',
+          title: 'Storage & Drive Relocation',
+          desc: 'Migrate launcher storage and game instances safely away from system drive C:',
           link: `/${loc}/guide/change-drive`,
+          badge: 'STORAGE',
         },
         {
-          title: 'AppX Migration',
-          desc: 'Migrate smoothly from older Windows Store packages without losing data',
+          id: 'appx-migrate',
+          index: '01.6',
+          title: 'Legacy AppX Package Migration',
+          desc: 'Seamless data transition from legacy Windows Store packages to modern standalone runs',
           link: `/${loc}/guide/appx-migrate`,
+          badge: 'MIGRATE',
         },
       ],
     },
     {
       id: 'game-mods',
-      number: '02',
-      kicker: 'CONFIGURATION',
+      number: '02 / 04',
+      code: 'RUNTIME_ENG',
+      kicker: 'RUNTIME CONFIGURATION',
       title: 'Game Management & Mods',
-      desc: 'Modloaders (Forge, Fabric, NeoForge), UI themes, custom CSS, Ely.by skins, and built-in Agnes AI assistant.',
-      icon: '🎮',
+      desc: 'Modloader orchestration, instance isolation, interface personalization via custom CSS, skin relays, and Agnes AI setup.',
+      status: 'LOADED // MODULAR',
       accentColor: '#4ade80',
       items: [
         {
-          title: 'Modloaders: Forge, Fabric, Quilt, NeoForge',
-          desc: 'Understanding modloaders, version compatibility, and installation choices',
+          id: 'modloaders',
+          index: '02.1',
+          title: 'Modloaders Guide',
+          desc: 'Architecture and installation of Forge, Fabric, Quilt, NeoForge & OptiFine',
           link: `/${loc}/guide/modloader`,
-          badge: 'Mods',
+          badge: 'MODLOADER',
         },
         {
-          title: 'Appearance & Custom CSS Guide',
-          desc: 'Themes, background images, transparency, and tailored CSS styles',
+          id: 'appearance',
+          index: '02.2',
+          title: 'Appearance & Custom CSS Engine',
+          desc: 'Full UI tailoring, transparency, themes, and custom cascading stylesheets',
           link: `/${loc}/guide/appearance`,
+          badge: 'UI_CUSTOM',
         },
         {
-          title: 'Custom Skins Guide (Ely.by / LittleSkin)',
-          desc: 'Setting up custom skins and cloaks with alternative skin systems',
+          id: 'custom-skins',
+          index: '02.3',
+          title: 'Third-Party Skin Services',
+          desc: 'Custom skins and capes routing via Ely.by and LittleSkin authentication',
           link: `/${loc}/guide/custom-skins`,
+          badge: 'SKINS',
         },
         {
-          title: 'Agnes AI Setup',
-          desc: 'Configuring the local intelligent AI assistant inside XMCL',
+          id: 'agnes-ai',
+          index: '02.4',
+          title: 'Agnes AI Local Assistant',
+          desc: 'Configuring the built-in intelligent companion directly in your workspace',
           link: `/${loc}/guide/agnes-ai-setup`,
+          badge: 'AI_AGENT',
         },
         {
-          title: 'Data & Storage Management',
-          desc: 'How XMCL stores data, manages instances, and keeps resources clean',
+          id: 'manage-storage',
+          index: '02.5',
+          title: 'Data Isolation & Asset Pool',
+          desc: 'How XMCL organizes instance folders, hardlink deduplication, and memory',
           link: `/${loc}/guide/manage`,
+          badge: 'INSTANCES',
         },
         {
-          title: 'Minecraft Bedrock Edition Guide',
-          desc: 'Running and configuring Bedrock edition alongside Java profiles',
+          id: 'bedrock',
+          index: '02.6',
+          title: 'Minecraft Bedrock Edition',
+          desc: 'Launching and configuring Bedrock edition parallel to Java profiles',
           link: `/${loc}/guide/bedrock`,
+          badge: 'BEDROCK',
         },
       ],
     },
     {
       id: 'multiplayer',
-      number: '03',
-      kicker: 'MULTIPLAYER',
+      number: '03 / 04',
+      code: 'NET_P2P',
+      kicker: 'NETWORK STACK & DIAGNOSTICS',
       title: 'Multiplayer & Diagnostics',
-      desc: 'Play with friends online without a public IP, configure direct P2P connections, and diagnose crashes effectively.',
-      icon: '🌐',
+      desc: 'Decentralized peer-to-peer mesh networking without public IPs, JVM crash dump forensics, and conflict diagnosis.',
+      status: 'CONNECT // ONLINE',
       accentColor: '#38bdf8',
       items: [
         {
+          id: 'together',
+          index: '03.1',
           title: 'XMCL Together: Cloud Multiplayer',
-          desc: 'Instant 1-click cloud multiplayer, server hosting, and session management',
+          desc: '1-Click instant cloud multiplayer rooms without router port forwarding',
           link: `/${loc}/guide/together`,
-          badge: 'Together',
+          badge: 'TOGETHER',
         },
         {
-          title: 'Minecraft LAN Multiplayer (P2P)',
-          desc: 'Direct peer-to-peer connection without port forwarding or third-party tools',
+          id: 'p2p',
+          index: '03.2',
+          title: 'Direct P2P LAN Multiplayer',
+          desc: 'Direct peer-to-peer data pipes without proxy bottlenecks or third-party apps',
           link: `/${loc}/guide/p2p`,
+          badge: 'P2P_MESH',
         },
         {
-          title: 'Troubleshooting Installation & Launch Issues',
-          desc: 'Analyze crash logs, solve Java version mismatches, and fix launch errors',
+          id: 'troubleshooting',
+          index: '03.3',
+          title: 'Crash Diagnostics & Forensics',
+          desc: 'Parse JVM crash logs, resolve graphics driver faults, and resolve mod incompatibilities',
           link: `/${loc}/guide/troubleshooting`,
-          badge: 'Diagnostics',
+          badge: 'FORENSICS',
         },
       ],
     },
     {
       id: 'architecture-core',
-      number: '04',
-      kicker: 'CORE & DEV',
-      title: 'Core Architecture & Development',
-      desc: 'Official technical core documentation (Core Document), network protocols, data formats, and contributing guide.',
-      icon: '🛠️',
-      accentColor: '#f59e0b',
+      number: '04 / 04',
+      code: 'CORE_SPEC',
+      kicker: 'CORE SPECIFICATION & MODULES',
+      title: 'Core Architecture & APIs',
+      desc: 'Complete technical documentation of the @xmcl/* packages: process lifecycle, P2P network protocol, developer setup, and i18n.',
+      status: 'SOURCE // TYPESCRIPT',
+      accentColor: '#ff8060',
       items: [
         {
-          title: 'Core Document (Overview & Launcher Core Docs)',
-          desc: 'Full API documentation for @xmcl/core: architecture, auth, launch lifecycle',
+          id: 'core-overview',
+          index: '04.1',
+          title: 'Core Document (Overview & Architecture)',
+          desc: 'Master architectural blueprint and reference for all @xmcl/* core libraries',
           link: '/en/core/',
-          badge: 'Core API',
+          badge: 'CORE_API',
         },
         {
-          title: '📦 @xmcl/installer (Version & Mod Installation)',
-          desc: 'Install vanilla Minecraft, Forge, Fabric, NeoForge modloaders, and Java runtimes',
+          id: 'core-installer',
+          index: '04.2',
+          title: '@xmcl/installer (Installation Engine)',
+          desc: 'Automated installer for vanilla Minecraft, modloaders, assets, and Java runtimes',
           link: '/en/core/installer',
+          badge: 'PACKAGE',
         },
         {
-          title: '📦 @xmcl/core (Launch Process & Core Types)',
-          desc: 'Process lifecycle, JVM arguments, launch options, and instance diagnostics',
+          id: 'core-core',
+          index: '04.3',
+          title: '@xmcl/core (Launch Process Lifecycle)',
+          desc: 'JVM argument generators, process watchers, instance parameters, and execution engine',
           link: '/en/core/core',
+          badge: 'PACKAGE',
         },
         {
-          title: '📦 @xmcl/client & P2P (Network Client)',
-          desc: 'Network protocol clients, direct P2P connections, LAN discovery, and server pings',
+          id: 'core-client',
+          index: '04.4',
+          title: '@xmcl/client (Network Client)',
+          desc: 'P2P connection handlers, LAN multicast discovery, pinging, and query protocols',
           link: '/en/core/client',
+          badge: 'PACKAGE',
         },
         {
-          title: '📦 @xmcl/mod-parser (Mod JAR Analyzer)',
-          desc: 'Parse mod JARs, read mod manifests, dependencies, and metadata',
+          id: 'core-mod-parser',
+          index: '04.5',
+          title: '@xmcl/mod-parser (Mod JAR Analyzer)',
+          desc: 'Inspect mod JAR manifests, metadata structures, and dependencies for Forge/Fabric/Quilt',
           link: '/en/core/mod-parser',
+          badge: 'PACKAGE',
         },
         {
-          title: 'P2P Online Protocols Explained',
-          desc: 'Technical specification of peer-to-peer communication and signaling protocols',
+          id: 'p2p-protocol',
+          index: '04.6',
+          title: 'P2P Online Protocol Specification',
+          desc: 'Technical wire protocol format, STUN/TURN signaling, and packet encryption specs',
           link: `/${loc}/protocol/p2p`,
+          badge: 'PROTOCOL',
         },
         {
-          title: 'Contributing to XMCL',
-          desc: 'How to set up the dev environment, build locally, and submit Pull Requests',
+          id: 'contributing',
+          index: '04.7',
+          title: 'Developer Contributing Guide',
+          desc: 'Setting up the TypeScript toolchain, compiling locally, and opening Pull Requests',
           link: `/${loc}/guide/contributing`,
+          badge: 'DEV_GUIDE',
         },
         {
-          title: 'Getting Started with Localization (i18n)',
-          desc: 'Translate the launcher UI and documentation into your native language',
+          id: 'i18n',
+          index: '04.8',
+          title: 'Localization & i18n Pipeline',
+          desc: 'Translate launcher interface strings and documentation into your language',
           link: `/${loc}/guide/i18n`,
+          badge: 'LOCALIZATION',
         },
       ],
     },
@@ -408,637 +548,1083 @@ const blocks = computed<DocBlock[]>(() => {
 </script>
 
 <template>
-  <div class="doc-hub-container">
-    <!-- Header Hero Section -->
-    <header class="doc-hub-hero">
-      <div class="doc-hub-kicker-wrap">
-        <span class="doc-hub-kicker">{{ kicker }}</span>
-        <span class="doc-hub-pill">v0.56+</span>
+  <div class="modern-doc-hub" :class="{ 'dark': isDark }">
+    <!-- Top HUD Terminal Bar -->
+    <header class="hub-terminal-header">
+      <div class="hub-status-strip">
+        <div class="hub-kicker-badge">
+          <span class="hub-pulse-dot" aria-hidden="true"></span>
+          <span class="hub-kicker-text">{{ isUk ? 'ТЕХНІЧНА СПЕЦИФІКАЦІЯ XMCL' : 'XMCL TECHNICAL SPECIFICATION' }}</span>
+        </div>
+        <div class="hub-version-tag">
+          <span class="hub-tag-prefix">BUILD:</span>
+          <strong>v0.56+ // PRODUCTION</strong>
+        </div>
       </div>
-      <h1 class="doc-hub-title">{{ title }}</h1>
-      <p class="doc-hub-subtitle">{{ subtitle }}</p>
 
-      <!-- Prominent Interactive Search Bar -->
-      <div class="doc-hub-search-container">
+      <div class="hub-hero-headline">
+        <h1 class="hub-title">
+          <span class="hub-title-light">{{ isUk ? 'АРХІТЕКТУРА ТА' : 'ARCHITECTURE &' }}</span>
+          <span class="hub-title-strong">{{ isUk ? 'ДОКУМЕНТАЦІЯ' : 'DOCUMENTATION' }}</span>
+        </h1>
+        <p class="hub-lead">
+          {{
+            isUk
+              ? 'Офіційний довідковий центр лаунчера: посібники з розгортання, ізоляція модифікацій, P2P mesh-мережі, діагностика краш-логів та документація ядра @xmcl/*.'
+              : 'The comprehensive manual for launcher deployment, instance orchestration, peer-to-peer mesh networking, crash forensics, and the @xmcl TypeScript core engine.'
+          }}
+        </p>
+      </div>
+
+      <!-- Command Console Search Terminal -->
+      <div class="hub-search-terminal">
+        <div class="hub-terminal-window-bar">
+          <div class="hub-terminal-dots">
+            <span class="dot dot-1"></span>
+            <span class="dot dot-2"></span>
+            <span class="dot dot-3"></span>
+          </div>
+          <span class="hub-terminal-caption">bash — xmcl-docs-search --live-index</span>
+          <span class="hub-terminal-hint">[INDEX: 23 PACKAGES + 18 GUIDES]</span>
+        </div>
+
         <button
           type="button"
-          class="doc-hub-search-trigger"
-          :aria-label="searchPlaceholder"
+          class="hub-terminal-input-btn"
+          :aria-label="isUk ? 'Пошук по всій документації' : 'Search all documentation'"
           @click="openSearchModal"
         >
-          <div class="doc-hub-search-left">
-            <svg
-              class="doc-hub-search-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-            <span class="doc-hub-search-text">{{ searchPlaceholder }}</span>
+          <div class="hub-input-inner">
+            <span class="hub-cli-prompt">user@xmcl:~$</span>
+            <span class="hub-cli-cmd">query-docs</span>
+            <span class="hub-cli-placeholder">{{ isUk ? 'Пошук статей, параметрів JVM, модулів ядра, помилок...' : 'Search guides, JVM parameters, core modules, error codes...' }}</span>
+            <span class="hub-cli-cursor">_</span>
           </div>
-          <div class="doc-hub-search-keys" aria-hidden="true">
-            <kbd class="hub-key">{{ isMac ? '⌘' : 'Ctrl' }}</kbd>
+          <div class="hub-shortcut-keys" aria-hidden="true">
+            <kbd class="hub-key">{{ isMac ? '⌘' : 'CTRL' }}</kbd>
+            <span class="hub-key-plus">+</span>
             <kbd class="hub-key">K</kbd>
           </div>
         </button>
 
-        <!-- Quick suggestion chips -->
-        <div class="doc-hub-quick-chips">
-          <span class="chips-label">{{ isUk ? 'Швидкий перехід:' : 'Quick links:' }}</span>
-          <div class="chips-list">
+        <!-- Command Flags Strip -->
+        <div class="hub-flags-row">
+          <span class="hub-flags-label">{{ isUk ? 'ШВИДКИЙ ВИКЛИК:' : 'QUICK_FLAGS:' }}</span>
+          <div class="hub-flags-list">
             <a
-              v-for="chip in quickChips"
-              :key="chip.text"
-              :href="chip.link"
-              class="chip-item"
+              v-for="item in quickFlags"
+              :key="item.flag"
+              :href="item.link"
+              class="hub-flag-chip"
             >
-              {{ chip.text }}
+              <span class="chip-flag">{{ item.flag }}</span>
+              <span class="chip-label">{{ item.label }}</span>
             </a>
           </div>
         </div>
       </div>
     </header>
 
-    <!-- The 4 Core Documentation Blocks -->
-    <main class="doc-hub-grid">
+    <!-- 4-Quadrant Architecture Matrix -->
+    <main class="hub-matrix-grid">
       <article
         v-for="block in blocks"
         :id="block.id"
         :key="block.id"
-        class="doc-block-card"
+        class="hub-quadrant-card"
+        :style="{ '--quadrant-accent': block.accentColor }"
       >
-        <!-- Block Card Header -->
-        <header class="block-card-header">
-          <div class="block-header-top">
-            <div class="block-icon-badge" :style="{ borderColor: block.accentColor }">
-              <span class="block-icon" aria-hidden="true">{{ block.icon }}</span>
-            </div>
-            <div class="block-meta">
-              <span class="block-number">{{ block.number }}</span>
-              <span class="block-kicker">{{ block.kicker }}</span>
-            </div>
+        <!-- Quadrant Window Bar -->
+        <div class="quadrant-window-bar">
+          <div class="quadrant-win-dots">
+            <span class="qdot"></span>
+            <span class="qdot"></span>
+            <span class="qdot"></span>
           </div>
-          <h2 class="block-title">{{ block.title }}</h2>
-          <p class="block-desc">{{ block.desc }}</p>
-        </header>
+          <span class="quadrant-code">{{ block.code }}</span>
+          <span class="quadrant-index">{{ block.number }}</span>
+        </div>
 
-        <!-- Block Sub-Articles List -->
-        <ul class="block-articles-list">
-          <li
-            v-for="item in block.items"
-            :key="item.title"
-            class="article-item-wrap"
-          >
-            <a :href="item.link" class="article-link">
-              <div class="article-link-content">
-                <div class="article-title-row">
-                  <span class="article-title">{{ item.title }}</span>
-                  <span v-if="item.badge" class="article-badge">{{ item.badge }}</span>
+        <!-- Quadrant Header -->
+        <div class="quadrant-body-header">
+          <div class="quadrant-kicker-row">
+            <span class="quadrant-kicker">{{ block.kicker }}</span>
+            <span class="quadrant-status">{{ block.status }}</span>
+          </div>
+          <h2 class="quadrant-title">{{ block.title }}</h2>
+          <p class="quadrant-desc">{{ block.desc }}</p>
+        </div>
+
+        <!-- Articles Register -->
+        <div class="quadrant-register">
+          <div class="register-header">
+            <span>{{ isUk ? 'ІНДЕКС / РЕЄСТР' : 'INDEX / REGISTER' }}</span>
+            <span>{{ isUk ? 'МОДУЛЬ' : 'MODULE' }}</span>
+          </div>
+
+          <div class="register-list">
+            <a
+              v-for="item in block.items"
+              :key="item.id"
+              :href="item.link"
+              class="register-item-link"
+            >
+              <div class="register-item-idx">{{ item.index }}</div>
+              <div class="register-item-content">
+                <div class="register-item-topline">
+                  <strong class="register-item-title">{{ item.title }}</strong>
+                  <span v-if="item.badge" class="register-item-badge">{{ item.badge }}</span>
                 </div>
-                <p class="article-desc">{{ item.desc }}</p>
+                <p class="register-item-desc">{{ item.desc }}</p>
               </div>
-              <span class="article-arrow" aria-hidden="true">→</span>
+              <span class="register-item-action" aria-hidden="true">→</span>
             </a>
-          </li>
-        </ul>
+          </div>
+        </div>
 
-        <!-- Block Footer Quick Jump -->
-        <footer class="block-card-footer">
-          <a :href="block.items[0]?.link" class="block-footer-btn">
-            <span>{{ isUk ? 'Переглянути розділ' : 'Explore section' }}</span>
-            <span aria-hidden="true">→</span>
+        <!-- Quadrant Terminal Jump -->
+        <div class="quadrant-card-footer">
+          <a :href="block.items[0]?.link" class="quadrant-action-btn">
+            <span class="btn-prefix">&gt;</span>
+            <span class="btn-text">{{ isUk ? 'ПЕРЕГЛЯНУТИ РОЗДІЛ' : 'VIEW MODULE SPECS' }}</span>
+            <span class="btn-arrow" aria-hidden="true">+</span>
           </a>
-        </footer>
+        </div>
       </article>
     </main>
 
-    <!-- Community & Contribution Section -->
-    <footer class="doc-hub-bottom">
-      <div class="help-card">
-        <div class="help-content">
-          <div class="help-icon">💡</div>
-          <div>
-            <h3>{{ isUk ? 'Потрібна додаткова допомога?' : 'Need additional help?' }}</h3>
-            <p>
-              {{
-                isUk
-                  ? 'Приєднуйтесь до нашого дружнього Discord-ком’юніті, запитуйте поради у розробників та спільноти.'
-                  : 'Join our welcoming Discord community to ask questions, discuss issues, and connect with devs.'
-              }}
-            </p>
+    <!-- Bottom Developer & Community Consoles -->
+    <section class="hub-consoles-section">
+      <!-- Community Console -->
+      <div class="hub-console-card console-community">
+        <div class="console-window-bar">
+          <div class="quadrant-win-dots">
+            <span class="qdot"></span>
+            <span class="qdot"></span>
+            <span class="qdot"></span>
           </div>
+          <span class="console-label">RELAY // 01</span>
+          <span class="console-status">LIVE PEERS</span>
         </div>
-        <a
-          href="https://discord.gg/W5XVwYY7GQ"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="help-btn discord-btn"
-        >
-          {{ isUk ? 'Спільнота в Discord' : 'Join Discord' }}
-        </a>
+        <div class="console-body">
+          <div class="console-meta-kicker">{{ isUk ? 'СПІЛЬНОТА РОЗРОБНИКІВ ТА ГРАВЦІВ' : 'PEER NETWORK & SUPPORT' }}</div>
+          <h3 class="console-heading">{{ isUk ? 'Спільнота в Discord' : 'Community Discord Relay' }}</h3>
+          <p class="console-copy">
+            {{
+              isUk
+                ? 'Цілодобова взаємодопомога, живе обговорення нових релізів, тестування експериментальних збірок та прямий зв’язок із розробниками лаунчера.'
+                : 'Direct developer access, real-time troubleshooting, community-built modpack support, and early feedback on upcoming features.'
+            }}
+          </p>
+          <a
+            href="https://discord.gg/W5XVwYY7GQ"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="console-btn"
+          >
+            <span>{{ isUk ? 'ПРИЄДНАТИСЯ ДО DISCORD' : 'CONNECT TO DISCORD' }}</span>
+            <span class="console-btn-plus">+</span>
+          </a>
+        </div>
       </div>
 
-      <div class="help-card">
-        <div class="help-content">
-          <div class="help-icon">📝</div>
-          <div>
-            <h3>{{ isUk ? 'Допомогти вдосконалити документацію' : 'Contribute to Documentation' }}</h3>
-            <p>
-              {{
-                isUk
-                  ? 'Помітили помилку або хочете додати новий посібник? Створіть Pull Request на GitHub!'
-                  : 'Found a typo or want to write a new tutorial? Open a Pull Request on GitHub!'
-              }}
-            </p>
+      <!-- GitHub Documentation Source Console -->
+      <div class="hub-console-card console-github">
+        <div class="console-window-bar">
+          <div class="quadrant-win-dots">
+            <span class="qdot"></span>
+            <span class="qdot"></span>
+            <span class="qdot"></span>
           </div>
+          <span class="console-label">SOURCE // 02</span>
+          <span class="console-status">PUBLIC REPO</span>
         </div>
-        <a
-          href="https://github.com/voxelum/xmcl-page"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="help-btn github-btn"
-        >
-          {{ isUk ? 'Репозиторій на GitHub' : 'GitHub Repository' }}
-        </a>
+        <div class="console-body">
+          <div class="console-meta-kicker">{{ isUk ? 'ВІДКРИТИЙ ВИХІДНИЙ КОД' : 'OPEN DOCUMENTATION SOURCE' }}</div>
+          <h3 class="console-heading">{{ isUk ? 'Допомогти вдосконалити документацію' : 'Contribute to Documentation' }}</h3>
+          <p class="console-copy">
+            {{
+              isUk
+                ? 'Усі посібники та технічна документація зберігаються на GitHub. Ви можете виправити неточність, оновити статтю або написати новий посібник через PR.'
+                : 'Every guide, API reference, and translation is open source. Open a Pull Request on GitHub to fix a typo, update a guide, or contribute new tutorials.'
+            }}
+          </p>
+          <a
+            href="https://github.com/voxelum/xmcl-page"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="console-btn"
+          >
+            <span>{{ isUk ? 'ВІДКРИТИ РЕПОЗИТОРІЙ GITHUB' : 'OPEN GITHUB REPOSITORY' }}</span>
+            <span class="console-btn-plus">+</span>
+          </a>
+        </div>
       </div>
-    </footer>
+    </section>
   </div>
 </template>
 
 <style scoped>
-.doc-hub-container {
+/* Base Reset & Variables Matching XMCL Brand */
+.modern-doc-hub {
+  --hub-ink: var(--xmcl-ink, #17211f);
+  --hub-muted: var(--xmcl-muted, #64706c);
+  --hub-paper: var(--xmcl-paper, #f4f5ef);
+  --hub-panel: var(--xmcl-panel, #ffffff);
+  --hub-line: var(--xmcl-line, #d8ded7);
+  --hub-line-dark: #b8c4b6;
+  --hub-lime: #c9f85a;
+  --hub-orange: #e45e42;
+  --hub-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --hub-sans: 'Space Grotesk', 'Avenir Next', 'Segoe UI', -apple-system, sans-serif;
+  
   width: 100%;
-  max-width: 1280px;
+  max-width: 1360px;
   margin: 0 auto;
-  padding: 32px 24px 80px;
+  padding: 32px clamp(16px, 4vw, 48px) 96px;
   box-sizing: border-box;
+  color: var(--hub-ink);
+  font-family: var(--hub-sans);
 }
 
-/* Hero Section */
-.doc-hub-hero {
-  text-align: center;
-  max-width: 860px;
-  margin: 0 auto 48px;
-  padding-top: 16px;
+:global(html.dark) .modern-doc-hub,
+.modern-doc-hub.dark {
+  --hub-ink: #edf3ed;
+  --hub-muted: #9aa9a1;
+  --hub-paper: #101612;
+  --hub-panel: #1b241f;
+  --hub-line: #334139;
+  --hub-line-dark: #44564c;
+  --hub-lime: #c9f85a;
+  --hub-orange: #ff8060;
+  color: #edf3ed;
 }
 
-.doc-hub-kicker-wrap {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
+:global(html.dark) .hub-quadrant-card,
+:global(html.dark) .hub-console-card,
+:global(html.dark) .hub-search-terminal,
+.modern-doc-hub.dark .hub-quadrant-card,
+.modern-doc-hub.dark .hub-console-card,
+.modern-doc-hub.dark .hub-search-terminal {
+  background-color: #1b241f !important;
+  color: #edf3ed !important;
+  border-color: #334139 !important;
 }
 
-.doc-hub-kicker {
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--xmcl-lime, #c9f85a);
+:global(html.dark) .console-body,
+.modern-doc-hub.dark .console-body {
+  background-color: #1b241f !important;
+  color: #edf3ed !important;
 }
 
-.doc-hub-pill {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 8px;
-  background-color: var(--xmcl-soft, rgba(201, 248, 90, 0.1));
-  border: 1px solid var(--xmcl-line, #334139);
-  border-radius: 9999px;
-  color: var(--xmcl-muted, #9aa9a1);
+:global(html.dark) .console-btn,
+.modern-doc-hub.dark .console-btn {
+  background-color: #151d18 !important;
+  color: #edf3ed !important;
+  border-color: #334139 !important;
 }
 
-.doc-hub-title {
-  font-size: clamp(32px, 5vw, 48px);
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.025em;
-  color: var(--xmcl-ink, #edf3ed);
-  margin-bottom: 16px;
+:global(html.dark) .console-btn:hover,
+.modern-doc-hub.dark .console-btn:hover {
+  background-color: #c9f85a !important;
+  color: #17211f !important;
+  border-color: #c9f85a !important;
 }
 
-.doc-hub-subtitle {
-  font-size: clamp(16px, 2vw, 18px);
-  line-height: 1.6;
-  color: var(--xmcl-muted, #9aa9a1);
-  margin-bottom: 32px;
+:global(html.dark) .register-list,
+.modern-doc-hub.dark .register-list {
+  background-color: #1b241f !important;
 }
 
-/* Prominent Search Container */
-.doc-hub-search-container {
-  max-width: 720px;
-  margin: 0 auto;
+:global(html.dark) .register-item-link,
+.modern-doc-hub.dark .register-item-link {
+  border-color: #334139 !important;
+  background-color: #1b241f;
 }
 
-.doc-hub-search-trigger {
-  width: 100%;
-  height: 56px;
+:global(html.dark) .register-item-link:hover,
+.modern-doc-hub.dark .register-item-link:hover {
+  background-color: rgba(201, 248, 90, 0.05) !important;
+}
+
+:global(html.dark) .register-item-title,
+.modern-doc-hub.dark .register-item-title {
+  color: #edf3ed !important;
+}
+
+:global(html.dark) .register-item-desc,
+.modern-doc-hub.dark .register-item-desc {
+  color: #9aa9a1 !important;
+}
+
+:global(html.dark) .console-heading,
+.modern-doc-hub.dark .console-heading {
+  color: #edf3ed !important;
+}
+
+:global(html.dark) .console-copy,
+.modern-doc-hub.dark .console-copy {
+  color: #9aa9a1 !important;
+}
+
+:global(html.dark) .hub-flag-chip,
+.modern-doc-hub.dark .hub-flag-chip {
+  background-color: #151d18 !important;
+  color: #edf3ed !important;
+  border-color: #334139 !important;
+}
+
+:global(html.dark) .hub-title-strong,
+.modern-doc-hub.dark .hub-title-strong {
+  color: #edf3ed !important;
+}
+
+:global(html.dark) .quadrant-title,
+.modern-doc-hub.dark .quadrant-title {
+  color: #edf3ed !important;
+}
+
+:global(html.dark) .quadrant-action-btn,
+.modern-doc-hub.dark .quadrant-action-btn {
+  background-color: #151d18 !important;
+  color: #edf3ed !important;
+  border-color: #334139 !important;
+}
+
+/* ==========================================================================
+   Terminal Header & Hero
+   ========================================================================== */
+.hub-terminal-header {
+  margin-bottom: 56px;
+}
+
+.hub-status-strip {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
-  background-color: var(--xmcl-panel, #1b241f);
-  border: 2px solid var(--xmcl-line, #334139);
-  border-radius: 14px;
-  color: var(--xmcl-muted, #9aa9a1);
-  cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  outline: none;
+  border-bottom: 1px solid var(--hub-line);
+  padding-bottom: 14px;
+  margin-bottom: 28px;
+  font-family: var(--hub-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
-.doc-hub-search-trigger:hover,
-.doc-hub-search-trigger:focus {
-  border-color: var(--xmcl-lime, #c9f85a);
-  background-color: var(--xmcl-soft, #151d18);
-  box-shadow: 0 0 0 3px rgba(201, 248, 90, 0.18), 0 8px 30px rgba(0, 0, 0, 0.25);
-  color: var(--xmcl-ink, #edf3ed);
-}
-
-.doc-hub-search-left {
+.hub-kicker-badge {
   display: flex;
   align-items: center;
-  gap: 14px;
-  min-width: 0;
-  flex: 1;
-}
-
-.doc-hub-search-icon {
-  width: 22px;
-  height: 22px;
-  flex-shrink: 0;
-  color: var(--xmcl-lime, #c9f85a);
-  transition: transform 0.2s ease;
-}
-
-.doc-hub-search-trigger:hover .doc-hub-search-icon {
-  transform: scale(1.1);
-}
-
-.doc-hub-search-text {
-  font-size: 16px;
-  font-weight: 500;
-  text-align: left;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.doc-hub-search-keys {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-left: 12px;
-}
-
-.hub-key {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 24px;
-  height: 24px;
-  padding: 0 6px;
-  font-family: inherit;
-  font-size: 12px;
+  gap: 10px;
   font-weight: 700;
-  color: var(--xmcl-muted, #9aa9a1);
-  background-color: var(--xmcl-paper, #101612);
-  border: 1px solid var(--xmcl-line, #334139);
-  border-radius: 6px;
+  color: var(--hub-muted);
 }
 
-/* Quick Suggestion Chips */
-.doc-hub-quick-chips {
+.hub-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--hub-lime);
+  box-shadow: 0 0 10px rgba(201, 248, 90, 0.7);
+  display: inline-block;
+  animation: pulse-glow 2.4s infinite ease-in-out;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.85); }
+}
+
+.hub-version-tag {
+  color: var(--hub-muted);
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
   gap: 8px;
-  margin-top: 14px;
-  justify-content: center;
 }
 
-.chips-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--xmcl-muted, #718078);
-  margin-right: 4px;
+.hub-version-tag strong {
+  color: var(--hub-ink);
 }
 
-.chips-list {
+.hub-hero-headline {
+  max-width: 980px;
+  margin-bottom: 36px;
+}
+
+.hub-title {
+  font-size: clamp(38px, 6vw, 76px);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  margin: 0 0 20px;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.hub-title-light {
+  color: var(--hub-orange);
+}
+
+.hub-title-strong {
+  color: var(--hub-ink);
+}
+
+.hub-lead {
+  font-size: clamp(16px, 1.6vw, 20px);
+  line-height: 1.55;
+  color: var(--hub-muted);
+  margin: 0;
+  max-width: 780px;
+}
+
+/* ==========================================================================
+   Command Console Search Terminal
+   ========================================================================== */
+.hub-search-terminal {
+  background: var(--hub-panel);
+  border: 1px solid var(--hub-ink);
+  box-shadow: 8px 8px 0px var(--hub-lime);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  overflow: hidden;
+}
+
+:global(html.dark) .hub-search-terminal {
+  box-shadow: 8px 8px 0px rgba(201, 248, 90, 0.35);
+  border-color: var(--hub-line-dark);
+}
+
+.hub-terminal-window-bar {
+  background: #151d18;
+  color: #8e9c94;
+  border-bottom: 1px solid var(--hub-line);
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--hub-mono);
+  font-size: 11px;
+}
+
+:global(html:not(.dark)) .hub-terminal-window-bar {
+  background: #202925;
+  color: #a4b4ab;
+}
+
+.hub-terminal-dots {
+  display: flex;
   gap: 6px;
 }
 
-.chip-item {
-  display: inline-block;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 8px;
-  background-color: var(--xmcl-soft, rgba(201, 248, 90, 0.06));
-  border: 1px solid var(--xmcl-line, #334139);
-  color: var(--xmcl-ink, #edf3ed);
-  text-decoration: none;
-  transition: all 0.18s ease;
+.hub-terminal-dots .dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
 }
 
-.chip-item:hover {
-  background-color: var(--xmcl-panel, #1b241f);
-  border-color: var(--xmcl-lime, #c9f85a);
-  color: var(--xmcl-lime, #c9f85a);
-  transform: translateY(-1px);
-}
+.dot-1 { background: #e45e42; }
+.dot-2 { background: #eab308; }
+.dot-3 { background: #22c55e; }
 
-/* Grid of 4 Core Blocks */
-.doc-hub-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 28px;
-  margin-bottom: 60px;
-}
-
-@media (max-width: 900px) {
-  .doc-hub-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Block Card */
-.doc-block-card {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--xmcl-panel, #1b241f);
-  border: 1px solid var(--xmcl-line, #334139);
-  border-radius: 18px;
-  padding: 28px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
-  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease, box-shadow 0.22s ease;
-}
-
-.doc-block-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--xmcl-line, rgba(201, 248, 90, 0.4));
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22);
-}
-
-.block-card-header {
-  margin-bottom: 20px;
-  padding-bottom: 18px;
-  border-bottom: 1px solid var(--xmcl-line, #334139);
-}
-
-.block-header-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.block-icon-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  background-color: var(--xmcl-soft, #151d18);
-  border: 2px solid;
-  border-radius: 12px;
-  font-size: 20px;
-}
-
-.block-meta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.block-number {
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--xmcl-muted, #718078);
+.hub-terminal-caption {
+  font-weight: 700;
   letter-spacing: 0.05em;
 }
 
-.block-kicker {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 2px 7px;
-  background-color: var(--xmcl-soft, #151d18);
-  border-radius: 6px;
-  color: var(--xmcl-muted, #9aa9a1);
+.hub-terminal-hint {
+  margin-left: auto;
+  font-size: 10px;
+  color: #6a7c72;
+  letter-spacing: 0.08em;
 }
 
-.block-title {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--xmcl-ink, #edf3ed);
-  margin-bottom: 8px;
-  line-height: 1.25;
-}
-
-.block-desc {
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--xmcl-muted, #9aa9a1);
-  margin: 0;
-}
-
-/* Block Sub-articles List */
-.block-articles-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex: 1;
-}
-
-.article-item-wrap {
-  margin: 0;
-  padding: 0;
-}
-
-.article-link {
+.hub-terminal-input-btn {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 14px;
-  border-radius: 10px;
-  background-color: var(--xmcl-soft, rgba(21, 29, 24, 0.4));
-  border: 1px solid transparent;
+  gap: 16px;
+  padding: 20px 22px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 160ms ease;
+}
+
+.hub-terminal-input-btn:hover {
+  background: rgba(201, 248, 90, 0.06);
+}
+
+.hub-input-inner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-family: var(--hub-mono);
+  font-size: 14px;
+}
+
+.hub-cli-prompt {
+  color: var(--hub-lime);
+  font-weight: 700;
+}
+
+.hub-cli-cmd {
+  color: var(--hub-orange);
+  font-weight: 700;
+}
+
+.hub-cli-placeholder {
+  color: var(--hub-muted);
+  font-weight: 500;
+}
+
+.hub-cli-cursor {
+  color: var(--hub-lime);
+  font-weight: 900;
+  animation: cursor-blink 1s step-end infinite;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.hub-shortcut-keys {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--hub-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--hub-ink);
+  flex-shrink: 0;
+}
+
+.hub-key {
+  background: rgba(154, 169, 161, 0.15);
+  border: 1px solid var(--hub-line-dark);
+  padding: 4px 8px;
+  min-width: 24px;
+  text-align: center;
+  box-shadow: 2px 2px 0px var(--hub-ink);
+}
+
+.hub-key-plus {
+  color: var(--hub-muted);
+}
+
+.hub-flags-row {
+  border-top: 1px solid var(--hub-line);
+  padding: 12px 22px;
+  background: rgba(21, 29, 24, 0.03);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+:global(html.dark) .hub-flags-row {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.hub-flags-label {
+  font-family: var(--hub-mono);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--hub-muted);
+}
+
+.hub-flags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hub-flag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid var(--hub-line);
+  background: var(--hub-paper);
   text-decoration: none;
-  transition: all 0.18s ease;
+  font-size: 11px;
+  font-family: var(--hub-mono);
+  color: var(--hub-ink);
+  transition: all 140ms ease;
 }
 
-.article-link:hover {
-  background-color: var(--xmcl-soft, #151d18);
-  border-color: var(--xmcl-line, #334139);
-  transform: translateX(4px);
+.hub-flag-chip:hover {
+  border-color: var(--hub-lime);
+  background: var(--hub-lime);
+  color: #17211f;
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 0px var(--hub-ink);
 }
 
-.article-link-content {
+.chip-flag {
+  color: var(--hub-orange);
+  font-weight: 700;
+}
+
+.hub-flag-chip:hover .chip-flag {
+  color: #17211f;
+}
+
+.chip-label {
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   4-Quadrant Architectural Bento Grid
+   ========================================================================== */
+.hub-matrix-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 36px;
+  margin-bottom: 64px;
+}
+
+@media (min-width: 960px) {
+  .hub-matrix-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.hub-quadrant-card {
+  background: var(--hub-panel);
+  border: 1px solid var(--hub-ink);
+  box-shadow: 6px 6px 0px var(--quadrant-accent);
+  display: flex;
+  flex-direction: column;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+:global(html.dark) .hub-quadrant-card {
+  border-color: var(--hub-line-dark);
+}
+
+.hub-quadrant-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 10px 10px 0px var(--quadrant-accent);
+}
+
+/* Window Bar inside Quadrant */
+.quadrant-window-bar {
+  background: #1b241f;
+  color: #8e9c94;
+  border-bottom: 1px solid var(--hub-line);
+  padding: 9px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--hub-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+
+:global(html:not(.dark)) .quadrant-window-bar {
+  background: #202925;
+  color: #9aa9a1;
+}
+
+.quadrant-win-dots {
+  display: flex;
+  gap: 5px;
+}
+
+.qdot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #64716b;
+}
+
+.quadrant-code {
+  font-weight: 800;
+  color: var(--quadrant-accent);
+}
+
+.quadrant-index {
+  margin-left: auto;
+  font-weight: 800;
+  color: #edf3ed;
+}
+
+/* Quadrant Body Header */
+.quadrant-body-header {
+  padding: 24px 24px 18px;
+  border-bottom: 1px solid var(--hub-line);
+}
+
+.quadrant-kicker-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-family: var(--hub-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  font-weight: 800;
+}
+
+.quadrant-kicker {
+  color: var(--hub-orange);
+}
+
+.quadrant-status {
+  color: var(--hub-muted);
+}
+
+.quadrant-title {
+  font-size: clamp(24px, 2.4vw, 32px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  margin: 0 0 10px;
+  color: var(--hub-ink);
+}
+
+.quadrant-desc {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--hub-muted);
+  margin: 0;
+}
+
+/* Register Table / Articles */
+.quadrant-register {
+  flex: 1 1 auto;
+}
+
+.register-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 24px;
+  background: rgba(21, 29, 24, 0.04);
+  border-bottom: 1px solid var(--hub-line);
+  font-family: var(--hub-mono);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: var(--hub-muted);
+}
+
+:global(html.dark) .register-header {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.register-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.register-item-link {
+  display: grid;
+  grid-template-columns: 46px 1fr auto;
+  align-items: start;
+  gap: 14px;
+  padding: 16px 24px;
+  text-decoration: none;
+  border-bottom: 1px solid var(--hub-line);
+  transition: all 140ms ease;
+  position: relative;
+}
+
+.register-item-link:last-child {
+  border-bottom: none;
+}
+
+.register-item-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0px;
+  background: var(--quadrant-accent);
+  transition: width 140ms ease;
+}
+
+.register-item-link:hover {
+  background: rgba(201, 248, 90, 0.04);
+  padding-left: 28px;
+}
+
+.register-item-link:hover::before {
+  width: 4px;
+}
+
+.register-item-idx {
+  font-family: var(--hub-mono);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--hub-muted);
+  padding-top: 2px;
+}
+
+.register-item-link:hover .register-item-idx {
+  color: var(--quadrant-accent);
+}
+
+.register-item-content {
   min-width: 0;
-  flex: 1;
 }
 
-.article-title-row {
+.register-item-topline {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
 }
 
-.article-title {
+.register-item-title {
   font-size: 14px;
-  font-weight: 600;
-  color: var(--xmcl-ink, #edf3ed);
-  transition: color 0.18s ease;
-}
-
-.article-link:hover .article-title {
-  color: var(--xmcl-lime, #c9f85a);
-}
-
-.article-badge {
-  font-size: 10px;
   font-weight: 700;
-  padding: 1px 6px;
-  border-radius: 4px;
-  background-color: rgba(201, 248, 90, 0.15);
-  color: var(--xmcl-lime, #c9f85a);
+  color: var(--hub-ink);
+  line-height: 1.3;
 }
 
-.article-desc {
+.register-item-link:hover .register-item-title {
+  color: var(--hub-orange);
+}
+
+.register-item-badge {
+  font-family: var(--hub-mono);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 1px 6px;
+  background: rgba(201, 248, 90, 0.15);
+  border: 1px solid var(--quadrant-accent);
+  color: var(--hub-ink);
+}
+
+.register-item-desc {
   font-size: 12px;
-  color: var(--xmcl-muted, #9aa9a1);
-  line-height: 1.4;
+  line-height: 1.5;
+  color: var(--hub-muted);
   margin: 0;
 }
 
-.article-arrow {
-  font-size: 14px;
-  color: var(--xmcl-muted, #718078);
-  margin-left: 12px;
-  transition: transform 0.18s ease, color 0.18s ease;
+.register-item-action {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--hub-muted);
+  align-self: center;
+  transition: transform 140ms ease, color 140ms ease;
 }
 
-.article-link:hover .article-arrow {
-  color: var(--xmcl-lime, #c9f85a);
-  transform: translateX(3px);
+.register-item-link:hover .register-item-action {
+  transform: translateX(4px);
+  color: var(--quadrant-accent);
 }
 
-/* Card Footer */
-.block-card-footer {
-  margin-top: 20px;
-  padding-top: 14px;
-  border-top: 1px solid var(--xmcl-line, #334139);
-  display: flex;
-  justify-content: flex-end;
+/* Quadrant Footer Action */
+.quadrant-card-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--hub-line);
+  background: rgba(21, 29, 24, 0.02);
 }
 
-.block-footer-btn {
+:global(html.dark) .quadrant-card-footer {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.quadrant-action-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--xmcl-lime, #c9f85a);
-  text-decoration: none;
-  transition: gap 0.18s ease;
-}
-
-.block-footer-btn:hover {
   gap: 10px;
+  text-decoration: none;
+  font-family: var(--hub-mono);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--hub-ink);
+  padding: 8px 14px;
+  border: 1px solid var(--hub-ink);
+  background: transparent;
+  transition: all 160ms ease;
 }
 
-/* Bottom Section */
-.doc-hub-bottom {
+:global(html.dark) .quadrant-action-btn {
+  border-color: var(--hub-line-dark);
+}
+
+.quadrant-action-btn:hover {
+  background: var(--quadrant-accent);
+  color: #17211f;
+  border-color: var(--quadrant-accent);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--hub-ink);
+}
+
+.btn-prefix {
+  color: var(--quadrant-accent);
+}
+
+.quadrant-action-btn:hover .btn-prefix {
+  color: #17211f;
+}
+
+.btn-arrow {
+  font-weight: 900;
+}
+
+/* ==========================================================================
+   Bottom Developer & Community Consoles
+   ========================================================================== */
+.hub-consoles-section {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  border-top: 1px solid var(--hub-line);
+  padding-top: 56px;
 }
 
-@media (max-width: 768px) {
-  .doc-hub-bottom {
-    grid-template-columns: 1fr;
+@media (min-width: 860px) {
+  .hub-consoles-section {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-.help-card {
+.hub-console-card {
+  background: var(--hub-panel);
+  border: 1px solid var(--hub-ink);
+  box-shadow: 6px 6px 0px var(--hub-ink);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 24px;
-  border-radius: 14px;
-  background-color: var(--xmcl-panel, #1b241f);
-  border: 1px solid var(--xmcl-line, #334139);
 }
 
-.help-content {
+:global(html.dark) .hub-console-card {
+  border-color: var(--hub-line-dark);
+  box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.5);
+}
+
+.console-community {
+  border-top: 3px solid #38bdf8;
+}
+
+.console-github {
+  border-top: 3px solid var(--hub-lime);
+}
+
+.console-window-bar {
+  background: #1b241f;
+  color: #8e9c94;
+  border-bottom: 1px solid var(--hub-line);
+  padding: 8px 16px;
   display: flex;
-  gap: 16px;
-  margin-bottom: 20px;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--hub-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
 }
 
-.help-icon {
-  font-size: 28px;
-  flex-shrink: 0;
+:global(html:not(.dark)) .console-window-bar {
+  background: #202925;
+  color: #9aa9a1;
 }
 
-.help-content h3 {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--xmcl-ink, #edf3ed);
-  margin-bottom: 6px;
+.console-label {
+  font-weight: 800;
+  color: #edf3ed;
 }
 
-.help-content p {
+.console-status {
+  margin-left: auto;
+  font-weight: 800;
+  color: var(--hub-lime);
+}
+
+.console-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+.console-meta-kicker {
+  font-family: var(--hub-mono);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--hub-orange);
+  margin-bottom: 8px;
+}
+
+.console-heading {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin: 0 0 12px;
+  color: var(--hub-ink);
+}
+
+.console-copy {
   font-size: 13px;
-  line-height: 1.5;
-  color: var(--xmcl-muted, #9aa9a1);
-  margin: 0;
+  line-height: 1.6;
+  color: var(--hub-muted);
+  margin: 0 0 24px;
+  flex: 1 1 auto;
 }
 
-.help-btn {
+.console-btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 10px 18px;
-  font-size: 13px;
-  font-weight: 700;
-  border-radius: 8px;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border: 1px solid var(--hub-ink);
+  background: var(--hub-panel);
+  color: var(--hub-ink);
   text-decoration: none;
-  transition: all 0.2s ease;
+  font-family: var(--hub-mono);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  transition: all 160ms ease;
 }
 
-.discord-btn {
-  background-color: #5865f2;
-  color: #ffffff;
+:global(html.dark) .console-btn {
+  border-color: var(--hub-line-dark);
 }
 
-.discord-btn:hover {
-  background-color: #4752c4;
+.console-btn:hover {
+  background: var(--hub-lime);
+  color: #17211f;
+  border-color: var(--hub-lime);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0px var(--hub-ink);
 }
 
-.github-btn {
-  background-color: var(--xmcl-soft, #151d18);
-  border: 1px solid var(--xmcl-line, #334139);
-  color: var(--xmcl-ink, #edf3ed);
+.console-btn-plus {
+  font-size: 14px;
+  font-weight: 900;
 }
 
-.github-btn:hover {
-  border-color: var(--xmcl-lime, #c9f85a);
-  color: var(--xmcl-lime, #c9f85a);
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .hub-terminal-header {
+    margin-bottom: 36px;
+  }
+  .hub-status-strip {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .hub-shortcut-keys {
+    display: none;
+  }
+  .register-item-link {
+    grid-template-columns: 36px 1fr auto;
+    padding: 14px 16px;
+  }
+  .quadrant-body-header {
+    padding: 20px 16px 14px;
+  }
 }
 </style>

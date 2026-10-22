@@ -44,10 +44,10 @@ docHub:
   githubRepo: GitHub Repository
   contributeDocs: Edit or Improve Docs
 docGroups:
-  gettingStarted: "🚀 Getting Started"
-  gameAndMods: "🎮 Game & Mods"
-  multiplayerAndTroubleshooting: "🌐 Multiplayer & Diagnostics"
-  coreAndDev: "🛠️ Core Architecture & Development"
+  gettingStarted: "01 / Getting Started"
+  gameAndMods: "02 / Game & Mods"
+  multiplayerAndTroubleshooting: "03 / Multiplayer & Diagnostics"
+  coreAndDev: "04 / Core Architecture & API"
 logViewer: Log Viewer
 protocol: Protocol
 changelogs: Changelogs
