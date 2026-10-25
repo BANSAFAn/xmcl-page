@@ -104,6 +104,7 @@ export function loadTheme(location: string, locale: string) {
         'manage.md',
         'modloader.md',
         'appearance.md',
+        'big-picture.md',
         'custom-skins.md',
         'agnes-ai-setup.md',
         'bedrock.md',
@@ -131,8 +132,9 @@ export function loadTheme(location: string, locale: string) {
             'manage.md': 'Керування сховищем',
             'modloader.md': 'Завантажувачі модів',
             'appearance.md': 'Оформлення та CSS',
+            'big-picture.md': 'Режим Big Picture та геймпади',
             'custom-skins.md': 'Кастомні скіни',
-            'agnes-ai-setup.md': 'Agnes AI помічник',
+            'agnes-ai-setup.md': 'Штучний інтелект (AI Agent)',
             'bedrock.md': 'Bedrock Edition',
             'together.md': 'XMCL Together',
             'p2p.md': 'Мережа P2P (LAN)',
@@ -150,8 +152,9 @@ export function loadTheme(location: string, locale: string) {
             'manage.md': 'Storage & Instances',
             'modloader.md': 'Modloaders',
             'appearance.md': 'Appearance & CSS',
+            'big-picture.md': 'Big Picture & Gamepads',
             'custom-skins.md': 'Custom Skins',
-            'agnes-ai-setup.md': 'Agnes AI Assistant',
+            'agnes-ai-setup.md': 'AI Assistant Setup',
             'bedrock.md': 'Bedrock Edition',
             'together.md': 'XMCL Together',
             'p2p.md': 'P2P LAN Multiplayer',
@@ -172,10 +175,34 @@ export function loadTheme(location: string, locale: string) {
         return item ? { text: resolveItemText(f, item.text), link: item.link } : null
     }).filter((v): v is { text: string; link: string } => !!v)
 
-    const gameAndModsItems = gameAndModsFiles.map(f => {
-        const item = guideMap.get(f)
-        return item ? { text: resolveItemText(f, item.text), link: item.link } : null
-    }).filter((v): v is { text: string; link: string } => !!v)
+    const gameAndModsItems: DefaultTheme.SidebarItem[] = []
+    for (const f of gameAndModsFiles) {
+        if (f === 'agnes-ai-setup.md') {
+            gameAndModsItems.push({
+                text: locale === 'uk' ? 'Штучний інтелект (AI Agent)' : 'AI Assistant (Agnes & Models)',
+                collapsed: false,
+                items: [
+                    {
+                        text: locale === 'uk' ? 'Agnes AI (Вбудована модель)' : 'Agnes AI (Built-in Model)',
+                        link: `/${locale}/guide/agnes-ai-setup`
+                    },
+                    {
+                        text: locale === 'uk' ? 'Хмарні моделі (Gemini, ChatGPT...)' : 'Cloud Models (Gemini, ChatGPT...)',
+                        link: `/${locale}/guide/ai-cloud-models`
+                    },
+                    {
+                        text: locale === 'uk' ? 'Локальні моделі (Ollama, LM Studio)' : 'Local Models (Ollama, LM Studio)',
+                        link: `/${locale}/guide/ai-local-models`
+                    },
+                ]
+            })
+        } else {
+            const item = guideMap.get(f)
+            if (item) {
+                gameAndModsItems.push({ text: resolveItemText(f, item.text), link: item.link })
+            }
+        }
+    }
 
     const multiplayerItems = multiplayerFiles.map(f => {
         const item = guideMap.get(f)

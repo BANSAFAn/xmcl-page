@@ -4,7 +4,7 @@ If you encounter issues when installing Minecraft, mod loaders (Forge/Fabric/Neo
 
 ---
 
-## 🌐 1. Download Fails or Hangs (Network Issues)
+1. Download Fails or Hangs (Network Issues)
 
 ### Symptoms
 * Downloading Minecraft, assets, libraries, or Forge/Fabric gets stuck at `0%`.
@@ -29,7 +29,7 @@ If you are behind a firewall or in a region with restricted internet access, con
 
 ---
 
-## 📦 2. Mod / Modpack Download Fails (CurseForge API Restriction)
+2. Mod / Modpack Download Fails (CurseForge API Restriction)
 
 ### Symptoms
 * When downloading a modpack or mod from CurseForge, some mods fail to download and show a warning icon.
@@ -48,7 +48,7 @@ XMCL handles this by allowing you to manually download the missing files:
 
 ---
 
-## 🔄 3. Infinite File Corruption Loop (Checksum Mismatch)
+3. Infinite File Corruption Loop (Checksum Mismatch)
 
 ### Symptoms
 * The launcher continuously redownloads a library or asset file, saying it is corrupted.
@@ -65,7 +65,7 @@ A file download was interrupted, and a corrupted partial file is locked in your 
 
 ---
 
-## ☕ 4. Game Crashes Instantly (Java Version Mismatch)
+4. Game Crashes Instantly (Java Version Mismatch)
 
 ### Symptoms
 * The game starts but crashes immediately with exit code `1` or `-1`.
@@ -93,7 +93,7 @@ Ensure your instance is using the correct Java version:
 
 ---
 
-## 📑 5. Launcher Won't Open or Black Screen
+5. Launcher Won't Open or Black Screen
 
 ### Symptoms
 * Double-clicking the launcher does nothing.
@@ -109,7 +109,7 @@ You can find the log files to see what is causing the crash:
 
 ---
 
-## 🔍 3. Mod is on CurseForge Website but Missing in Launcher Search
+3. Mod is on CurseForge Website but Missing in Launcher Search
 
 ### Symptoms
 * You search for a mod inside the launcher, but it says "No results found", even though you can see it on the official CurseForge website.
@@ -125,7 +125,7 @@ CurseForge allows mod authors to **disable third-party API access** for their mo
 
 ---
 
-## 📦 4. Imported Modpacks "Disappear" or Seem Empty
+4. Imported Modpacks "Disappear" or Seem Empty
 
 ### Symptoms
 * You drag and drop a modpack `.zip` or `.mrpack` file into the launcher, but you can't find it in your current game profile, or the mod list appears empty.
@@ -140,7 +140,7 @@ CurseForge allows mod authors to **disable third-party API access** for their mo
 
 ---
 
-## 🔄 5. Infinite File Corruption Loop (Checksum Mismatch)
+5. Infinite File Corruption Loop (Checksum Mismatch)
 
 ### Symptoms
 * The launcher continuously redownloads a library or asset file, saying it is corrupted.
@@ -157,7 +157,7 @@ A file download was interrupted, and a corrupted partial file is locked in your 
 
 ---
 
-## ☕ 6. Game Crashes Instantly (Java Version Mismatch)
+6. Game Crashes Instantly (Java Version Mismatch)
 
 ### Symptoms
 * The game starts but crashes immediately with exit code `1` or `-1`.
@@ -185,7 +185,7 @@ Ensure your instance is using the correct Java version:
 
 ---
 
-## 📑 7. Launcher Won't Open or Black Screen
+7. Launcher Won't Open or Black Screen
 
 ### Symptoms
 * Double-clicking the launcher does nothing.
@@ -201,23 +201,77 @@ You can find the log files to see what is causing the crash:
 
 ---
 
-## 📋 8. Generate a Diagnostic Report (Recommended First Step)
+8. Diagnostic Report: What It Is, Privacy & Sharing Safety
 
-Before searching for raw log files manually, we highly recommend generating a **Diagnostic Report** inside the launcher. This compiles all launcher logs, game logs, and system environment info into a single package, allowing the community or developers to help you much faster.
+Before searching for raw log files manually, we highly recommend generating a **Diagnostic Report** inside the launcher. This automatically compiles all launcher logs, game logs, and system environment info into a single convenient `.zip` archive.
 
-### How to Generate a Report:
-1. Click on the **Help & Feedback** menu in the launcher header.
-2. Click **Generate Report** to bundle launcher diagnostics and logs.
+What is the Report and how to generate it?
 
-   <img src="/guidephoto/Generate%20Report.gif" alt="Generate Report" style="border-radius: 8px; max-width: 100%; border: 1px solid var(--vp-c-divider); margin: 12px 0;">
+The launcher report is a standard ZIP archive created in one click:
+1. Open the **Help & Feedback** menu in the launcher header or sidebar.
+2. Click **Generate Report**.
+3. Choose a folder on your computer to save the `.zip` archive (e.g. Desktop).
+
+<img src="/guidephoto/Generate%20Report.gif" alt="Generate Report" style="border-radius: 8px; max-width: 100%; border: 1px solid var(--vp-c-divider); margin: 12px 0;">
 
 ---
 
-## 📑 9. How to Analyze Launcher & Game Logs
+What exactly does the report collect?
+
+The generated `.zip` contains only technical diagnostic diagnostics:
+
+1. **`device.json` file**:
+   - `platform`: Operating system (`win32`, `darwin`, `linux`).
+   - `arch`: CPU architecture (`x64`, `arm64`).
+   - `version` & `release`: OS version and kernel build number.
+   - `sessionId`: Anonymous random client installation token for log correlation (never tied to your personal Microsoft account).
+2. **`logs/` directory**:
+   - `main.log`: Primary launcher background process log (lifecycle events, download operations, network pings, launcher errors).
+   - `renderer.log`: UI frontend log.
+   - Game instance execution output and JVM crash exit codes.
+
+---
+
+What the report NEVER collects (Privacy Guarantees)
+
+XMCL is designed with strict privacy principles:
+
+* **Zero Passwords**: The launcher never logs or exports your passwords.
+* **Zero Authentication Tokens**: Microsoft OAuth session tokens (access tokens, refresh tokens), offline UUID secrets, and account tokens are stored exclusively in your operating system's hardware-encrypted credential vault (Windows Credential Manager / DPAPI, macOS Keychain, Linux Secret Service). They are **strictly excluded** from diagnostic reports.
+* **Zero Financial Data**: XMCL has no access to bank cards or payment details.
+
+---
+
+### ️ Can you delete or redact anything before sharing?
+
+**Yes, 100%.** The exported report is a standard, unencrypted ZIP file:
+
+1. Open the exported `.zip` file with any archive manager or Windows/macOS file explorer.
+2. You can inspect any log file (such as `main.log`) in any text editor (Notepad, VS Code).
+3. **Common items you can sanitize:**
+   - **PC User Name in file paths**: File paths may contain your local username (e.g. `C:\Users\YourName\AppData\...`). If you prefer anonymity, use Notepad's Find & Replace (`Ctrl + H`) to replace your name with `user`.
+   - **Private Server IPs**: If you played on a private LAN or friend's server and want to keep the IP address/domain confidential, delete or mask those lines.
+   - You can delete any individual log file from the archive before uploading.
+
+---
+
+Is it safe to share the report with others (on Discord or GitHub)?
+
+**Yes, it is completely safe.**
+
+Diagnostic reports are built specifically for public troubleshooting in community support channels:
+* In our **#feedback-and-idea** channel on the official XMCL Discord server.
+* In public bug report issues on the official XMCL GitHub repository.
+
+No third party or developer can hijack your Minecraft license, read your passwords, or access your account using this file. If you have privacy concerns regarding your Windows username or private server addresses, simply redact those lines as described above before posting.
+
+---
+
+9. How to Analyze Launcher & Game Logs
 
 If you prefer to find the logs manually, they will tell you exactly what is happening. Here is how to locate them and understand common crash scenarios.
 
-### 🔍 How to Find the Logs
+How to Find the Logs
 
 Depending on whether it's a launcher error or a game crash, you will need to check different logs:
 
@@ -237,11 +291,11 @@ For mod conflicts, Minecraft crashes, performance issues, or Java errors:
 
 ---
 
-### 🛠 How to Analyze Logs & Fix Common Errors
+How to Analyze Logs & Fix Common Errors
 
 Open the log file in any text editor (like Notepad) and look for the following errors (you can use `Ctrl + F` to search):
 
-#### 🔴 Case 1: Out of Memory Error
+Case 1: Out of Memory Error
 - **What to look for:** `java.lang.OutOfMemoryError: Java heap space` or `Exit code: -805306369`.
 - **Explanation:** You haven't allocated enough RAM for the game to load all the mods.
 - **How to fix:**
@@ -249,24 +303,24 @@ Open the log file in any text editor (like Notepad) and look for the following e
   2. Scroll down to the **Java** section.
   3. Increase the **Min Memory** and **Max Memory** (e.g. set Max Memory to `4096` or `6144` MB).
 
-#### 🔴 Case 2: Mod Mismatch or Missing Dependencies
+Case 2: Mod Mismatch or Missing Dependencies
 - **What to look for:** `Mixin transformation failed`, `DependencyResolutionException`, or lines like `Requires mod 'fabric' (version X or later), but only version Y is installed`.
 - **Explanation:** One of your mods requires another mod (dependency) that is missing, or two mods are incompatible with each other.
 - **How to fix:** Read the error line carefully. It usually names the missing mod. Download and place the missing mod jar file into your `mods` folder, or update the conflicting mod to a compatible version.
 
-#### 🔴 Case 3: Java Version Mismatch
+Case 3: Java Version Mismatch
 - **What to look for:** `java.lang.UnsupportedClassVersionError: ... has been compiled by a more recent version of the Java Runtime`.
 - **Explanation:** You are running a Minecraft version or modpack with an incompatible Java version (e.g., using Java 8 for Minecraft 1.20).
 - **How to fix:** Open instance settings, go to the **Java** section, and click **Install Java** to download the recommended Java version for that specific Minecraft version.
 
-#### 🔴 Case 4: Graphics Card Driver Crash
+Case 4: Graphics Card Driver Crash
 - **What to look for:** `GLFW error 65542: WGL: The driver does not seem to support OpenGL` or `Pixel format not accelerated`.
 - **Explanation:** Your graphics card drivers are outdated, missing, or the game is running on your CPU's integrated graphics instead of your dedicated GPU.
 - **How to fix:** Update your graphics drivers to the latest version from the official manufacturer website (NVIDIA, AMD, or Intel). For laptops, ensure the launcher is running on the high-performance GPU in your system settings.
 
 ---
 
-### ❓ What to Do If You Can't Understand the Logs?
+What to Do If You Can't Understand the Logs?
 
 If you've looked through the logs/reports and still don't know what is causing the crash, do not worry! The XMCL community is here to help across multiple platforms:
 
