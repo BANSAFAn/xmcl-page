@@ -16,6 +16,7 @@ changelogs: Список изменений
 blogs: Блог
 outline: На этой странице
 coreDocument: Основной документ
+documentation: Документация
 launcher:
   manage:
     intro: Эффективно управляйте своим Minecraft.

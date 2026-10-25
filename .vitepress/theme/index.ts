@@ -31,6 +31,7 @@ import ImageZoomLightbox from './components/ImageZoomLightbox.vue'
 import CommercialNavEntry from './components/CommercialNavEntry.vue'
 import BlogTierCards from './components/BlogTierCards.vue'
 import GuideFloatingSearch from './components/GuideFloatingSearch.vue'
+import GuideDocFooter from './components/GuideDocFooter.vue'
 import DocumentationHub from './components/DocumentationHub.vue'
 
 const supportedLocales = ['ar', 'be', 'de', 'en', 'es', 'fr', 'it', 'jp', 'kk', 'ko', 'pl', 'ru', 'uk', 'zh-TW', 'zh']
@@ -92,6 +93,7 @@ export default {
       h(DefaultTheme.Layout, props, {
         'nav-bar-content-after': () => h(CommercialNavEntry),
         'layout-bottom': () => [h(SiteFooter), h(ImageZoomLightbox), h(GuideFloatingSearch)],
+        'doc-after': () => h(GuideDocFooter),
       }),
     ]
   }),

@@ -162,6 +162,26 @@ export function loadTheme(location: string, locale: string) {
             'contributing.md': 'Contributing Guide',
             'i18n.md': 'Localization (i18n)',
         },
+        ru: {
+            'install.md': 'Установка',
+            'update.md': 'Обновления',
+            'offline-mode.md': 'Офлайн-режим',
+            'microsoft-login-issues.md': 'Вход Microsoft',
+            'change-drive.md': 'Смена диска',
+            'appx-migrate.md': 'Миграция AppX',
+            'manage.md': 'Управление хранилищем',
+            'modloader.md': 'Загрузчики модов',
+            'appearance.md': 'Оформление и CSS',
+            'big-picture.md': 'Режим Big Picture и геймпады',
+            'custom-skins.md': 'Кастомные скины',
+            'agnes-ai-setup.md': 'Искусственный интеллект (AI Agent)',
+            'bedrock.md': 'Bedrock Edition',
+            'together.md': 'XMCL Together',
+            'p2p.md': 'Сеть P2P (LAN)',
+            'troubleshooting.md': 'Диагностика и сбои',
+            'contributing.md': 'Участие в разработке',
+            'i18n.md': 'Локализация (i18n)',
+        },
     }
 
     const resolveItemText = (file: string, fallback: string) => {
@@ -178,20 +198,25 @@ export function loadTheme(location: string, locale: string) {
     const gameAndModsItems: DefaultTheme.SidebarItem[] = []
     for (const f of gameAndModsFiles) {
         if (f === 'agnes-ai-setup.md') {
+            const aiText = locale === 'uk' ? 'Штучний інтелект (AI Agent)' : (locale === 'ru' ? 'Искусственный интеллект (AI Agent)' : 'AI Assistant (Agnes & Models)')
+            const agnesText = locale === 'uk' ? 'Agnes AI (Вбудована модель)' : (locale === 'ru' ? 'Agnes AI (Встроенная модель)' : 'Agnes AI (Built-in Model)')
+            const cloudText = locale === 'uk' ? 'Хмарні моделі (Gemini, ChatGPT...)' : (locale === 'ru' ? 'Облачные модели (Gemini, ChatGPT...)' : 'Cloud Models (Gemini, ChatGPT...)')
+            const localText = locale === 'uk' ? 'Локальні моделі (Ollama, LM Studio)' : (locale === 'ru' ? 'Локальные модели (Ollama, LM Studio)' : 'Local Models (Ollama, LM Studio)')
+
             gameAndModsItems.push({
-                text: locale === 'uk' ? 'Штучний інтелект (AI Agent)' : 'AI Assistant (Agnes & Models)',
+                text: aiText,
                 collapsed: false,
                 items: [
                     {
-                        text: locale === 'uk' ? 'Agnes AI (Вбудована модель)' : 'Agnes AI (Built-in Model)',
+                        text: agnesText,
                         link: `/${locale}/guide/agnes-ai-setup`
                     },
                     {
-                        text: locale === 'uk' ? 'Хмарні моделі (Gemini, ChatGPT...)' : 'Cloud Models (Gemini, ChatGPT...)',
+                        text: cloudText,
                         link: `/${locale}/guide/ai-cloud-models`
                     },
                     {
-                        text: locale === 'uk' ? 'Локальні моделі (Ollama, LM Studio)' : 'Local Models (Ollama, LM Studio)',
+                        text: localText,
                         link: `/${locale}/guide/ai-local-models`
                     },
                 ]
@@ -222,14 +247,14 @@ export function loadTheme(location: string, locale: string) {
 
     if (corePackages.length > 0) {
         coreAndDevItems.push({
-            text: locale === 'uk' ? 'Модулі ядра (@xmcl/*)' : 'Core Packages (@xmcl/*)',
+            text: locale === 'uk' ? 'Модулі ядра (@xmcl/*)' : (locale === 'ru' ? 'Модули ядра (@xmcl/*)' : 'Core Packages (@xmcl/*)'),
             collapsed: true,
             items: corePackages
         })
     }
 
     const docGroups = localeMessages.docGroups || {}
-    const hubLabel = locale === 'uk' ? 'Центр документації' : (localeMessages.documentation || 'Documentation Hub')
+    const hubLabel = locale === 'uk' ? 'Центр документації' : (locale === 'ru' ? 'Центр документации' : (localeMessages.documentation || 'Documentation Hub'))
     const commonSidebar: DefaultTheme.SidebarItem[] = [
         {
             text: hubLabel,
@@ -324,10 +349,6 @@ export function loadTheme(location: string, locale: string) {
             langMenuLabel: localeMessages.langMenuLabel,
             docFooter: localeMessages.docFooter,
             lastUpdatedText: localeMessages.lastUpdatedText,
-            editLink: {
-                text: localeMessages.editLink,
-                pattern: 'https://github.com/voxelum/xmcl-page/edit/master/src/:path'
-            }
         }
     }
     return theme
