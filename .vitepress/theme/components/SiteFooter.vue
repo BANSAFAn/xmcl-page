@@ -134,9 +134,12 @@ const year = new Date().getFullYear()
 .site-doc-footer {
   background: var(--vp-c-bg, #111714);
   border-top: 1px solid var(--vp-c-divider, rgba(255, 255, 255, 0.08));
-  padding: 24px clamp(24px, 5vw, 64px) 20px;
+  padding: 12px clamp(20px, 4vw, 48px) 10px;
   font-family: 'Space Grotesk', -apple-system, sans-serif;
   color: var(--vp-c-text-2, #8b9991);
+  box-sizing: border-box;
+  position: relative;
+  z-index: 5;
 }
 
 .site-doc-footer-inner {
@@ -202,7 +205,7 @@ const year = new Date().getFullYear()
 
 .site-doc-disclaimer {
   max-width: 1440px;
-  margin: 14px auto 0;
+  margin: 6px auto 0;
   font-size: 10px;
   font-family: 'JetBrains Mono', monospace;
   letter-spacing: 0.06em;

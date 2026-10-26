@@ -217,10 +217,10 @@ export function loadTheme(location: string, locale: string) {
     const gameAndModsItems: DefaultTheme.SidebarItem[] = []
     for (const f of gameAndModsFiles) {
         if (f === 'agnes-ai-setup.md') {
-            const aiText = locale === 'uk' ? 'Штучний інтелект (AI Agent)' : (locale === 'ru' ? 'Искусственный интеллект (AI Agent)' : 'AI Assistant (Agnes & Models)')
-            const agnesText = locale === 'uk' ? 'Agnes AI (Вбудована модель)' : (locale === 'ru' ? 'Agnes AI (Встроенная модель)' : 'Agnes AI (Built-in Model)')
-            const cloudText = locale === 'uk' ? 'Хмарні моделі (Gemini, ChatGPT...)' : (locale === 'ru' ? 'Облачные модели (Gemini, ChatGPT...)' : 'Cloud Models (Gemini, ChatGPT...)')
-            const localText = locale === 'uk' ? 'Локальні моделі (Ollama, LM Studio)' : (locale === 'ru' ? 'Локальные модели (Ollama, LM Studio)' : 'Local Models (Ollama, LM Studio)')
+            const aiText = locale === 'uk' ? 'Штучний інтелект (AI)' : (locale === 'ru' ? 'Искусственный интеллект (AI)' : 'AI Assistant (Models)')
+            const agnesText = locale === 'uk' ? 'Agnes AI (Вбудована)' : (locale === 'ru' ? 'Agnes AI (Встроенная)' : 'Agnes AI (Built-in)')
+            const cloudText = locale === 'uk' ? 'Хмарні моделі (Gemini, GPT)' : (locale === 'ru' ? 'Облачные модели (Gemini, GPT)' : 'Cloud Models (Gemini, GPT)')
+            const localText = locale === 'uk' ? 'Локальні моделі (Ollama, LM)' : (locale === 'ru' ? 'Локальные модели (Ollama, LM)' : 'Local Models (Ollama, LM)')
 
             gameAndModsItems.push({
                 text: aiText,
@@ -251,10 +251,10 @@ export function loadTheme(location: string, locale: string) {
     const multiplayerItems: DefaultTheme.SidebarItem[] = []
     for (const f of multiplayerFiles) {
         if (f === 'troubleshooting.md') {
-            const diagGroupTitle = locale === 'uk' ? 'Діагностика збоїв та логи' : (locale === 'ru' ? 'Диагностика сбоев и логи' : 'Crash Diagnostics & Logs')
-            const fixTitle = locale === 'uk' ? 'Вирішення проблем із запуском' : (locale === 'ru' ? 'Устранение неполадок при запуске' : 'Launch & Crash Troubleshooting')
-            const logsTitle = locale === 'uk' ? 'Журнали збоїв та коди виходу' : (locale === 'ru' ? 'Журналы сбоев и коды выхода' : 'Crash Logs & Exit Codes')
-            const reportTitle = locale === 'uk' ? 'Діагностичний звіт (.zip) та приватність' : (locale === 'ru' ? 'Диагностический отчет (.zip) и конфиденциальность' : 'Diagnostic Report (.zip) & Privacy')
+            const diagGroupTitle = locale === 'uk' ? 'Діагностика збоїв' : (locale === 'ru' ? 'Диагностика сбоев' : 'Crash Diagnostics')
+            const fixTitle = locale === 'uk' ? 'Вирішення збоїв запуску' : (locale === 'ru' ? 'Устранение сбоев запуска' : 'Crash Troubleshooting')
+            const logsTitle = locale === 'uk' ? 'Журнали та коди виходу' : (locale === 'ru' ? 'Журналы и коды ошибок' : 'Logs & Exit Codes')
+            const reportTitle = locale === 'uk' ? 'Звіт (.zip) та приватність' : (locale === 'ru' ? 'Отчет (.zip) и приватность' : 'Diagnostic Report (.zip)')
 
             multiplayerItems.push({
                 text: diagGroupTitle,
