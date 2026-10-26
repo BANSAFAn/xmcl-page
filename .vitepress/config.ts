@@ -9,6 +9,7 @@ import { DefaultTheme } from 'vitepress/theme'
 import { loadTheme } from './themeHelper'
 import { ensureGuideFallbacks } from './guideFallbacks'
 
+// Force config reload
 ensureGuideFallbacks()
 import { imagetools } from 'vite-imagetools'
 

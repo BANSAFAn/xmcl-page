@@ -33,6 +33,7 @@ import BlogTierCards from './components/BlogTierCards.vue'
 import GuideFloatingSearch from './components/GuideFloatingSearch.vue'
 import GuideDocFooter from './components/GuideDocFooter.vue'
 import DocumentationHub from './components/DocumentationHub.vue'
+import AsideLastUpdated from './components/AsideLastUpdated.vue'
 
 const supportedLocales = ['ar', 'be', 'de', 'en', 'es', 'fr', 'it', 'jp', 'kk', 'ko', 'pl', 'ru', 'uk', 'zh-TW', 'zh']
 
@@ -94,6 +95,7 @@ export default {
         'nav-bar-content-after': () => h(CommercialNavEntry),
         'layout-bottom': () => [h(SiteFooter), h(ImageZoomLightbox), h(GuideFloatingSearch)],
         'doc-after': () => h(GuideDocFooter),
+        'aside-outline-after': () => h(AsideLastUpdated),
       }),
     ]
   }),

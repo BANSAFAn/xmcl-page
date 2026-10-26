@@ -1,5 +1,5 @@
-import { writeFileSync, existsSync } from "fs";
-import { resolve } from "path";
+import { writeFileSync, existsSync, mkdirSync, readdirSync } from "fs";
+import { resolve, join } from "path";
 import { execSync } from "child_process";
 import { ensureGuideFallbacks } from "./.vitepress/guideFallbacks";
 
@@ -26,3 +26,18 @@ if (!existsSync(corePath)) {
 // 3. Automated Guide Fallbacks with Localized Notice Banner
 ensureGuideFallbacks();
 console.log('Automated guide fallbacks generated successfully.');
+
+// 4. Pre-create dist directories for concurrent static rendering
+try {
+    const srcDir = resolve('src');
+    const locales = readdirSync(srcDir, { withFileTypes: true })
+        .filter(d => d.isDirectory() && d.name !== 'assets')
+        .map(d => d.name);
+    for (const loc of locales) {
+        for (const sub of ['guide', 'protocol', 'blog', 'changelogs', 'core']) {
+            mkdirSync(resolve('.vitepress', 'dist', loc, sub), { recursive: true });
+        }
+    }
+} catch (e) {
+    console.error('Dist directory pre-creation error:', e);
+}

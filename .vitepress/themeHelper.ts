@@ -120,7 +120,6 @@ export function loadTheme(location: string, locale: string) {
 
     const coreAndDevFiles = [
         'contributing.md',
-        'i18n.md',
     ]
 
     const guideShortTitles: Record<string, Record<string, string>> = {
@@ -141,8 +140,9 @@ export function loadTheme(location: string, locale: string) {
             'together.md': 'XMCL Together',
             'p2p.md': 'Мережа P2P (LAN)',
             'troubleshooting.md': 'Діагностика та збої',
+            'crash-logs.md': 'Аналіз краш-логів та коди помилок',
+            'diagnostic-report.md': 'Діагностичний звіт (.zip) та приватність',
             'contributing.md': 'Участь у розробці',
-            'i18n.md': 'Локалізація (i18n)',
         },
         en: {
             'install.md': 'Installation',
@@ -161,8 +161,9 @@ export function loadTheme(location: string, locale: string) {
             'together.md': 'XMCL Together',
             'p2p.md': 'P2P LAN Multiplayer',
             'troubleshooting.md': 'Crash Diagnostics & Logs',
+            'crash-logs.md': 'Crash Logs & Exit Codes',
+            'diagnostic-report.md': 'Diagnostic Report (.zip) & Privacy',
             'contributing.md': 'Contributing Guide',
-            'i18n.md': 'Localization (i18n)',
         },
         ru: {
             'install.md': 'Установка',
@@ -181,8 +182,9 @@ export function loadTheme(location: string, locale: string) {
             'together.md': 'XMCL Together',
             'p2p.md': 'Сеть P2P (LAN)',
             'troubleshooting.md': 'Диагностика и сбои',
+            'crash-logs.md': 'Анализ краш-логов и коды ошибок',
+            'diagnostic-report.md': 'Диагностический отчет (.zip) и приватность',
             'contributing.md': 'Участие в разработке',
-            'i18n.md': 'Локализация (i18n)',
         },
     }
 
@@ -241,10 +243,39 @@ export function loadTheme(location: string, locale: string) {
         }
     }
 
-    const multiplayerItems: DefaultTheme.SidebarItem[] = multiplayerFiles.map(f => ({
-        text: resolveItemTitle(f),
-        link: `/${locale}/guide/${f}`
-    }))
+    const multiplayerItems: DefaultTheme.SidebarItem[] = []
+    for (const f of multiplayerFiles) {
+        if (f === 'troubleshooting.md') {
+            const diagGroupTitle = locale === 'uk' ? 'Діагностика збоїв та логи' : (locale === 'ru' ? 'Диагностика сбоев и логи' : 'Crash Diagnostics & Logs')
+            const fixTitle = locale === 'uk' ? 'Вирішення проблем із запуском' : (locale === 'ru' ? 'Устранение неполадок при запуске' : 'Launch & Crash Troubleshooting')
+            const logsTitle = locale === 'uk' ? 'Журнали збоїв та коди виходу' : (locale === 'ru' ? 'Журналы сбоев и коды выхода' : 'Crash Logs & Exit Codes')
+            const reportTitle = locale === 'uk' ? 'Діагностичний звіт (.zip) та приватність' : (locale === 'ru' ? 'Диагностический отчет (.zip) и конфиденциальность' : 'Diagnostic Report (.zip) & Privacy')
+
+            multiplayerItems.push({
+                text: diagGroupTitle,
+                collapsed: false,
+                items: [
+                    {
+                        text: fixTitle,
+                        link: `/${locale}/guide/troubleshooting`
+                    },
+                    {
+                        text: logsTitle,
+                        link: `/${locale}/guide/crash-logs`
+                    },
+                    {
+                        text: reportTitle,
+                        link: `/${locale}/guide/diagnostic-report`
+                    },
+                ]
+            })
+        } else {
+            multiplayerItems.push({
+                text: resolveItemTitle(f),
+                link: `/${locale}/guide/${f}`
+            })
+        }
+    }
 
     const coreAndDevItems: DefaultTheme.SidebarItem[] = [
         { text: (localeMessages.coreDocument || 'Core Document') + ' (Overview)', link: '/en/core/' }

@@ -267,10 +267,26 @@ const blocks = computed<DocBlock[]>(() => {
           {
             id: 'troubleshooting',
             index: '03.3',
-            title: 'Диагностика сбоев и краш-логи',
-            desc: 'Анализ журналов JVM, ошибок видеодрайверов и выявление несовместимых модов',
+            title: 'Устранение неполадок при запуске',
+            desc: 'Ошибки Java JDK, распределение памяти OOM, видеодрайверы и конфликты модов',
             link: `/${loc}/guide/troubleshooting`,
             badge: 'FORENSICS',
+          },
+          {
+            id: 'crash-logs',
+            index: '03.4',
+            title: 'Журналы сбоев и коды выхода',
+            desc: 'Расположение логов, расшифровка кодов 0xC0000005, 1, 137 и анализ стектрейса',
+            link: `/${loc}/guide/crash-logs`,
+            badge: 'CRASH_LOGS',
+          },
+          {
+            id: 'diagnostic-report',
+            index: '03.5',
+            title: 'Диагностический отчет (.zip) и приватность',
+            desc: 'Формирование отчета лаунчера, проверка device.json и полная защита от утечки токенов',
+            link: `/${loc}/guide/diagnostic-report`,
+            badge: 'TELEMETRY',
           },
         ],
       },
@@ -280,7 +296,7 @@ const blocks = computed<DocBlock[]>(() => {
         code: 'CORE_SPEC',
         kicker: 'СПЕЦИФИКАЦИЯ ЯДРА И МОДУЛИ',
         title: 'Базовая документация ядра и API',
-        desc: 'Полная техническая документация модулей ядра @xmcl/*: запуск процессов JVM, сетевой протокол P2P, разработка и i18n.',
+        desc: 'Полная техническая документация модулей ядра @xmcl/*: запуск процессов JVM, сетевой протокол P2P и разработка.',
         status: 'SOURCE // TYPESCRIPT',
         accentColor: '#ff8060',
         items: [
@@ -339,14 +355,6 @@ const blocks = computed<DocBlock[]>(() => {
             desc: 'Настройка окружения, локальная компиляция проекта и оформление Pull Request',
             link: `/${loc}/guide/contributing`,
             badge: 'DEV_GUIDE',
-          },
-          {
-            id: 'i18n',
-            index: '04.8',
-            title: 'Локализация и перевод (i18n)',
-            desc: 'Добавление и синхронизация словарей перевода лаунчера на ваш родной язык',
-            link: `/${loc}/guide/i18n`,
-            badge: 'LOCALIZATION',
           },
         ],
       },
@@ -527,10 +535,26 @@ const blocks = computed<DocBlock[]>(() => {
           {
             id: 'troubleshooting',
             index: '03.3',
-            title: 'Діагностика збоїв та краш-логи',
-            desc: 'Аналіз журналів JVM, помилок драйверів відеокарти та виявлення несумісних модів',
+            title: 'Вирішення проблем із запуском',
+            desc: 'Помилки Java JDK, розподіл пам’яті OOM, відеодрайвери та конфлікти модів',
             link: `/${loc}/guide/troubleshooting`,
             badge: 'FORENSICS',
+          },
+          {
+            id: 'crash-logs',
+            index: '03.4',
+            title: 'Журнали збоїв та коди виходу',
+            desc: 'Розташування логів, розшифровка кодів 0xC0000005, 1, 137 та аналіз стектрейсу',
+            link: `/${loc}/guide/crash-logs`,
+            badge: 'CRASH_LOGS',
+          },
+          {
+            id: 'diagnostic-report',
+            index: '03.5',
+            title: 'Діагностичний звіт (.zip) та приватність',
+            desc: 'Формування звіту лаунчера, перевірка device.json та захист від витоку токенів',
+            link: `/${loc}/guide/diagnostic-report`,
+            badge: 'TELEMETRY',
           },
         ],
       },
@@ -540,7 +564,7 @@ const blocks = computed<DocBlock[]>(() => {
         code: 'CORE_SPEC',
         kicker: 'СПЕЦИФІКАЦІЯ ЯДРА ТА МОДУЛІ',
         title: 'Базова документація ядра та API',
-        desc: 'Повна технічна документація модулів ядра @xmcl/*: запуск процесів JVM, мережевий протокол P2P, розробка та i18n.',
+        desc: 'Повна технічна документація модулів ядра @xmcl/*: запуск процесів JVM, мережевий протокол P2P та розробка.',
         status: 'SOURCE // TYPESCRIPT',
         accentColor: '#ff8060',
         items: [
@@ -599,14 +623,6 @@ const blocks = computed<DocBlock[]>(() => {
             desc: 'Налаштування оточення, локальна компіляція проекту та оформлення Pull Request',
             link: `/${loc}/guide/contributing`,
             badge: 'DEV_GUIDE',
-          },
-          {
-            id: 'i18n',
-            index: '04.8',
-            title: 'Локалізація та переклад (i18n)',
-            desc: 'Додавання та синхронізація словників перекладу лаунчера вашою рідною мовою',
-            link: `/${loc}/guide/i18n`,
-            badge: 'LOCALIZATION',
           },
         ],
       },
@@ -788,10 +804,26 @@ const blocks = computed<DocBlock[]>(() => {
         {
           id: 'troubleshooting',
           index: '03.3',
-          title: 'Crash Diagnostics & Forensics',
-          desc: 'Parse JVM crash logs, resolve graphics driver faults, and resolve mod incompatibilities',
+          title: 'Launch & Crash Troubleshooting',
+          desc: 'Resolve Java JDK faults, out-of-memory crashes, GPU driver errors, and mod conflicts',
           link: `/${loc}/guide/troubleshooting`,
           badge: 'FORENSICS',
+        },
+        {
+          id: 'crash-logs',
+          index: '03.4',
+          title: 'Crash Logs & Exit Codes',
+          desc: 'Locate log files, decode exit codes (0xC0000005, 1, 137), and parse Java stack traces',
+          link: `/${loc}/guide/crash-logs`,
+          badge: 'CRASH_LOGS',
+        },
+        {
+          id: 'diagnostic-report',
+          index: '03.5',
+          title: 'Diagnostic Report (.zip) & Privacy',
+          desc: 'Export launcher diagnostics, inspect device.json, and privacy safeguards against token leaks',
+          link: `/${loc}/guide/diagnostic-report`,
+          badge: 'TELEMETRY',
         },
       ],
     },
@@ -801,7 +833,7 @@ const blocks = computed<DocBlock[]>(() => {
       code: 'CORE_SPEC',
       kicker: 'CORE SPECIFICATION & MODULES',
       title: 'Core Architecture & APIs',
-      desc: 'Complete technical documentation of the @xmcl/* packages: process lifecycle, P2P network protocol, developer setup, and i18n.',
+      desc: 'Complete technical documentation of the @xmcl/* packages: process lifecycle, P2P network protocol, and developer setup.',
       status: 'SOURCE // TYPESCRIPT',
       accentColor: '#ff8060',
       items: [
@@ -860,14 +892,6 @@ const blocks = computed<DocBlock[]>(() => {
           desc: 'Setting up the TypeScript toolchain, compiling locally, and opening Pull Requests',
           link: `/${loc}/guide/contributing`,
           badge: 'DEV_GUIDE',
-        },
-        {
-          id: 'i18n',
-          index: '04.8',
-          title: 'Localization & i18n Pipeline',
-          desc: 'Translate launcher interface strings and documentation into your language',
-          link: `/${loc}/guide/i18n`,
-          badge: 'LOCALIZATION',
         },
       ],
     },
@@ -1099,24 +1123,46 @@ const t = computed(() => {
           <span class="console-status">LIVE PEERS</span>
         </div>
         <div class="console-body">
-          <div class="console-meta-kicker">{{ isUk ? 'СПІЛЬНОТА РОЗРОБНИКІВ ТА ГРАВЦІВ' : 'PEER NETWORK & SUPPORT' }}</div>
-          <h3 class="console-heading">{{ isUk ? 'Спільнота в Discord' : 'Community Discord Relay' }}</h3>
+          <div class="console-meta-kicker">{{ isUk ? 'СПІЛЬНОТА РОЗРОБНИКІВ ТА ГРАВЦІВ' : (isRu ? 'СООБЩЕСТВО И ПОДДЕРЖКА' : 'PEER NETWORK & SUPPORT') }}</div>
+          <h3 class="console-heading">{{ isUk ? 'Спільнота та зворотний зв’язок' : (isRu ? 'Сообщество и обратная связь' : 'Community & Support Relay') }}</h3>
           <p class="console-copy">
             {{
               isUk
-                ? 'Цілодобова взаємодопомога, живе обговорення нових релізів, тестування експериментальних збірок та прямий зв’язок із розробниками лаунчера.'
-                : 'Direct developer access, real-time troubleshooting, community-built modpack support, and early feedback on upcoming features.'
+                ? 'Якщо документація не допомогла вирішити проблему чи ви знайшли баг у лаунчері, зверніться до спільноти або створіть Issue на GitHub:'
+                : (isRu
+                  ? 'Если документация не помогла решить проблему или вы обнаружили баг, обратитесь к сообществу или создайте Issue на GitHub:'
+                  : 'If the documentation didn’t resolve your issue, get direct community support or report launcher bugs on Discord, Reddit, or GitHub:')
             }}
           </p>
-          <a
-            href="https://discord.gg/W5XVwYY7GQ"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="console-btn"
-          >
-            <span>{{ isUk ? 'ПРИЄДНАТИСЯ ДО DISCORD' : 'CONNECT TO DISCORD' }}</span>
-            <span class="console-btn-plus">+</span>
-          </a>
+          <div class="console-actions-row">
+            <a
+              href="https://discord.gg/W5XVwYY7GQ"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="console-btn"
+            >
+              <span>{{ isUk ? 'DISCORD СПІЛЬНОТА' : (isRu ? 'DISCORD СООБЩЕСТВО' : 'CONNECT TO DISCORD') }}</span>
+              <span class="console-btn-plus">+</span>
+            </a>
+            <a
+              href="https://www.reddit.com/r/XMCL/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="console-btn"
+            >
+              <span>{{ isUk ? 'R/XMCL НА REDDIT' : (isRu ? 'R/XMCL НА REDDIT' : 'R/XMCL ON REDDIT') }}</span>
+              <span class="console-btn-plus">+</span>
+            </a>
+            <a
+              href="https://github.com/voxelum/x-minecraft-launcher/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="console-btn"
+            >
+              <span>{{ isUk ? 'GITHUB ISSUES (БАГИ)' : (isRu ? 'GITHUB ISSUES (БАГИ)' : 'GITHUB ISSUES (REPORT BUG)') }}</span>
+              <span class="console-btn-plus">+</span>
+            </a>
+          </div>
         </div>
       </div>
 
@@ -1963,6 +2009,12 @@ const t = computed(() => {
   color: var(--hub-muted);
   margin: 0 0 24px;
   flex: 1 1 auto;
+}
+
+.console-actions-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .console-btn {
