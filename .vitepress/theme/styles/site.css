@@ -469,3 +469,80 @@ body:not(:has(.xmcl-modern)):not(:has(.xmcl-legacy)) .VPNavBarMenuLink.active::b
 .VPDocFooter .edit-info {
   display: none !important;
 }
+
+
+/* ==========================================================================
+   Custom Technical Cyberpunk Scrollbars (XMCL Dark Brutalist Style)
+   ========================================================================== */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2e3d35 transparent;
+}
+
+html:not(.dark) * {
+  scrollbar-color: #c2c9bf transparent;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2b3a32;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #42564a;
+  border-color: rgba(201, 248, 90, 0.25);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #c9f85a;
+  border-color: #c9f85a;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+html:not(.dark) ::-webkit-scrollbar-thumb {
+  background: #c2c9bf;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+html:not(.dark) ::-webkit-scrollbar-thumb:hover {
+  background: #9fa99b;
+}
+
+html:not(.dark) ::-webkit-scrollbar-thumb:active {
+  background: #e45e42;
+}
+
+.VPSidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.VPSidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.VPSidebar::-webkit-scrollbar-thumb {
+  background: #25332b;
+  border-radius: 3px;
+}
+
+.VPSidebar::-webkit-scrollbar-thumb:hover {
+  background: #3e5246;
+}
+
+.VPSidebar::-webkit-scrollbar-thumb:active {
+  background: #c9f85a;
+}
