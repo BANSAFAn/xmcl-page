@@ -2,7 +2,7 @@
 
 <!-- xmcl-auto-fallback -->
 ::: info لم يتم ترجمة هذا القسم إلى اللغة العربية بعد
-يتم عرض المحتوى باللغة الإنجليزية. إذا كنت ترغب في المساعدة في الترجمة، يرجى زيارة [مستودع xmcl-page على GitHub](https://github.com/voxelum/xmcl-page).
+يتم عرض المحتوى باللغة الإنجليزية. إذا كنت ترغب в المساعدة في الترجمة، يرجى زيارة [مستودع xmcl-page على GitHub](https://github.com/voxelum/xmcl-page).
 :::
 
 XMCL features a dedicated **Big Picture Mode** — a full-screen, 10-foot user interface designed specifically for couch gaming on televisions, PC gamepad navigation, and handheld gaming consoles like the Steam Deck, ASUS ROG Ally, and Lenovo Legion Go.

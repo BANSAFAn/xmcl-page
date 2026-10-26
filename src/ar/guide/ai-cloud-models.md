@@ -2,7 +2,7 @@
 
 <!-- xmcl-auto-fallback -->
 ::: info لم يتم ترجمة هذا القسم إلى اللغة العربية بعد
-يتم عرض المحتوى باللغة الإنجليزية. إذا كنت ترغب في المساعدة في الترجمة، يرجى زيارة [مستودع xmcl-page على GitHub](https://github.com/voxelum/xmcl-page).
+يتم عرض المحتوى باللغة الإنجليزية. إذا كنت ترغب в المساعدة في الترجمة، يرجى زيارة [مستودع xmcl-page على GitHub](https://github.com/voxelum/xmcl-page).
 :::
 
 The XMCL **AI Agent** communicates using the standard **OpenAI Chat Completions API protocol** (`/v1/chat/completions`). This enables you to bring your own API keys from any commercial cloud provider to power the launcher assistant.

@@ -2,7 +2,7 @@
 
 <!-- xmcl-auto-fallback -->
 ::: info لم يتم ترجمة هذا القسم إلى اللغة العربية بعد
-يتم عرض المحتوى باللغة الإنجليزية. إذا كنت ترغب في المساعدة في الترجمة، يرجى زيارة [مستودع xmcl-page على GitHub](https://github.com/voxelum/xmcl-page).
+يتم عرض المحتوى باللغة الإنجليزية. إذا كنت ترغب в المساعدة في الترجمة، يرجى زيارة [مستودع xmcl-page على GitHub](https://github.com/voxelum/xmcl-page).
 :::
 
 XMCL lets you connect **locally running LLMs** executing directly on your own computer's GPU or CPU. This provides:

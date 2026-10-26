@@ -2,7 +2,7 @@
 
 <!-- xmcl-auto-fallback -->
 ::: info لم يتم ترجمة هذا القسم إلى اللغة العربية بعد
-يتم عرض المحتوى باللغة الإنجليزية. إذا كنت ترغب في المساعدة في الترجمة، يرجى زيارة [مستودع xmcl-page على GitHub](https://github.com/voxelum/xmcl-page).
+يتم عرض المحتوى باللغة الإنجليزية. إذا كنت ترغب в المساعدة في الترجمة، يرجى زيارة [مستودع xmcl-page على GitHub](https://github.com/voxelum/xmcl-page).
 :::
 
 If you encounter issues when installing Minecraft, mod loaders (Forge/Fabric/NeoForge/Quilt), mods, modpacks, or shaders, or if the game fails to launch, this guide will help you resolve them step-by-step.

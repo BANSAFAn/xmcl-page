@@ -2,7 +2,7 @@
 
 <!-- xmcl-auto-fallback -->
 ::: info لم يتم ترجمة هذا القسم إلى اللغة العربية بعد
-يتم عرض المحتوى باللغة الإنجليزية. إذا كنت ترغب في المساعدة في الترجمة، يرجى زيارة [مستودع xmcl-page على GitHub](https://github.com/voxelum/xmcl-page).
+يتم عرض المحتوى باللغة الإنجليزية. إذا كنت ترغب в المساعدة في الترجمة، يرجى زيارة [مستودع xmcl-page على GitHub](https://github.com/voxelum/xmcl-page).
 :::
 
 This guide will explain why custom skins (from services like Ely.by or LittleSkin) might not show up by default in XMCL compared to other loaders, how skin rendering works in Minecraft Java, and how to configure it correctly.
