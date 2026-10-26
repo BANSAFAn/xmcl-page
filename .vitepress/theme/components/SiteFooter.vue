@@ -132,14 +132,14 @@ const year = new Date().getFullYear()
    Dedicated Minimal Documentation Footer
    ========================================================================== */
 .site-doc-footer {
-  background: var(--vp-c-bg, #111714);
-  border-top: 1px solid var(--vp-c-divider, rgba(255, 255, 255, 0.08));
-  padding: 12px clamp(20px, 4vw, 48px) 10px;
+  background: #111714 !important;
+  border-top: 1px solid var(--vp-c-divider, rgba(255, 255, 255, 0.12));
+  padding: 14px clamp(24px, 5vw, 64px) 12px;
   font-family: 'Space Grotesk', -apple-system, sans-serif;
   color: var(--vp-c-text-2, #8b9991);
   box-sizing: border-box;
-  position: relative;
-  z-index: 5;
+  position: relative !important;
+  z-index: 1000 !important;
 }
 
 .site-doc-footer-inner {

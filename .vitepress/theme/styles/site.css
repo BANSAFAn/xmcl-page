@@ -169,12 +169,12 @@ body:not(:has(.xmcl-modern)):not(:has(.xmcl-legacy)) .VPNavScreenMenuLink {
 body:not(:has(.xmcl-modern)):not(:has(.xmcl-legacy)) .VPSidebar {
   background: var(--xmcl-paper) !important;
   border-right: 1px solid var(--xmcl-line) !important;
-  z-index: 20 !important;
+  z-index: 10 !important;
 }
 
 .VPSidebar,
 .VPSidebar .nav {
-  padding-bottom: 32px !important;
+  padding-bottom: 96px !important;
   box-sizing: border-box !important;
 }
 
@@ -438,19 +438,18 @@ html.dark body:has(.blog-article-wrapper) .VPDocAsideOutline .outline-link.activ
   color: var(--xmcl-lime);
 }
 
+/* Footer stays on top of everything (sidebar, background, indicators) */
+.site-doc-footer,
+.site-footer {
+  position: relative !important;
+  z-index: 1000 !important;
+  background: #111714 !important;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
 @media (min-width: 960px) {
   .has-sidebar .site-footer {
     padding-left: calc(var(--vp-sidebar-width, 272px) + clamp(24px, 4vw, 64px)) !important;
-  }
-
-  .has-sidebar .site-doc-footer {
-    padding-left: calc(var(--vp-sidebar-width, 272px) + clamp(20px, 3vw, 48px)) !important;
-  }
-
-  .has-sidebar .VPSidebar {
-    bottom: 64px !important;
-    height: calc(100vh - var(--vp-nav-height, 64px) - 64px) !important;
-    max-height: calc(100vh - var(--vp-nav-height, 64px) - 64px) !important;
   }
 }
 
