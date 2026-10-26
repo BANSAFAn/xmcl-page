@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync } from "fs";
 import { join } from "path";
 import { DefaultTheme, LocaleConfig } from "vitepress";
 import { parse } from 'yaml';
+import { ensureGuideFallbacks } from "./guideFallbacks";
 
 export function loadSidebarSection(location: string, locale: string, type: string) {
     try {
@@ -73,6 +74,7 @@ function loadCorePackages(): DefaultTheme.SidebarItem[] {
 }
 
 export function loadTheme(location: string, locale: string) {
+    ensureGuideFallbacks();
     const localeFile = join(__dirname, '..', 'locales', locale + '.yml')
     const localeMessages = parse(readFileSync(localeFile, 'utf-8'))
     const sidebar: DefaultTheme.SidebarMulti = {}
@@ -184,16 +186,26 @@ export function loadTheme(location: string, locale: string) {
         },
     }
 
-    const resolveItemText = (file: string, fallback: string) => {
-        const localeDict = guideShortTitles[locale] || guideShortTitles.en
-        return localeDict?.[file] || fallback
+    const guideMap = new Map(guideSection.map(item => [item.file, item]))
+
+    const resolveItemTitle = (file: string) => {
+        if (guideShortTitles[locale]?.[file]) {
+            return guideShortTitles[locale][file]
+        }
+        const item = guideMap.get(file)
+        if (item && item.text) {
+            return item.text
+        }
+        if (locale === 'ru' && guideShortTitles.uk?.[file]) {
+            return guideShortTitles.uk[file]
+        }
+        return guideShortTitles.en?.[file] || file.replace(/\.md$/, '')
     }
 
-    const guideMap = new Map(guideSection.map(item => [item.file, item]))
-    const gettingStartedItems = gettingStartedFiles.map(f => {
-        const item = guideMap.get(f)
-        return item ? { text: resolveItemText(f, item.text), link: item.link } : null
-    }).filter((v): v is { text: string; link: string } => !!v)
+    const gettingStartedItems: DefaultTheme.SidebarItem[] = gettingStartedFiles.map(f => ({
+        text: resolveItemTitle(f),
+        link: `/${locale}/guide/${f}`
+    }))
 
     const gameAndModsItems: DefaultTheme.SidebarItem[] = []
     for (const f of gameAndModsFiles) {
@@ -222,17 +234,17 @@ export function loadTheme(location: string, locale: string) {
                 ]
             })
         } else {
-            const item = guideMap.get(f)
-            if (item) {
-                gameAndModsItems.push({ text: resolveItemText(f, item.text), link: item.link })
-            }
+            gameAndModsItems.push({
+                text: resolveItemTitle(f),
+                link: `/${locale}/guide/${f}`
+            })
         }
     }
 
-    const multiplayerItems = multiplayerFiles.map(f => {
-        const item = guideMap.get(f)
-        return item ? { text: resolveItemText(f, item.text), link: item.link } : null
-    }).filter((v): v is { text: string; link: string } => !!v)
+    const multiplayerItems: DefaultTheme.SidebarItem[] = multiplayerFiles.map(f => ({
+        text: resolveItemTitle(f),
+        link: `/${locale}/guide/${f}`
+    }))
 
     const coreAndDevItems: DefaultTheme.SidebarItem[] = [
         { text: (localeMessages.coreDocument || 'Core Document') + ' (Overview)', link: '/en/core/' }
@@ -241,8 +253,10 @@ export function loadTheme(location: string, locale: string) {
         coreAndDevItems.push({ text: localeMessages.protocol || 'Protocol (P2P)', link: `/${locale}/protocol/p2p` })
     }
     for (const f of coreAndDevFiles) {
-        const item = guideMap.get(f)
-        if (item) coreAndDevItems.push({ text: resolveItemText(f, item.text), link: item.link })
+        coreAndDevItems.push({
+            text: resolveItemTitle(f),
+            link: `/${locale}/guide/${f}`
+        })
     }
 
     if (corePackages.length > 0) {

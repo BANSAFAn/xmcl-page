@@ -11,6 +11,7 @@ onMounted(() => {
 })
 
 const isUk = computed(() => (lang.value || 'en').toLowerCase().startsWith('uk'))
+const isRu = computed(() => (lang.value || 'en').toLowerCase().startsWith('ru'))
 const isZh = computed(() => (lang.value || 'en').toLowerCase().startsWith('zh'))
 const currentLocale = computed(() => lang.value || 'en')
 
@@ -37,6 +38,19 @@ interface DocBlock {
 
 const quickFlags = computed(() => {
   const loc = currentLocale.value
+  if (isRu.value) {
+    return [
+      { flag: '--install', label: 'Установка', link: `/${loc}/guide/install` },
+      { flag: '--modloaders', label: 'Forge / Fabric', link: `/${loc}/guide/modloader` },
+      { flag: '--big-picture', label: 'Big Picture', link: `/${loc}/guide/big-picture` },
+      { flag: '--ai-models', label: 'AI Agent', link: `/${loc}/guide/agnes-ai-setup` },
+      { flag: '--together', label: 'Облачная игра', link: `/${loc}/guide/together` },
+      { flag: '--p2p-lan', label: 'Сеть P2P', link: `/${loc}/guide/p2p` },
+      { flag: '--custom-skins', label: 'Скины Ely.by', link: `/${loc}/guide/custom-skins` },
+      { flag: '--core-api', label: 'Core Document', link: '/en/core/' },
+      { flag: '--diagnostics', label: 'Отчет и логи', link: `/${loc}/guide/troubleshooting` },
+    ]
+  }
   if (isUk.value) {
     return [
       { flag: '--install', label: 'Встановлення', link: `/${loc}/guide/install` },
@@ -78,6 +92,266 @@ const quickFlags = computed(() => {
 
 const blocks = computed<DocBlock[]>(() => {
   const loc = currentLocale.value
+  if (isRu.value) {
+    return [
+      {
+        id: 'getting-started',
+        number: '01 / 04',
+        code: 'SYS_INIT',
+        kicker: 'ИНИЦИАЛИЗАЦИЯ СИСТЕМЫ',
+        title: 'Начало работы',
+        desc: 'Полный цикл развертывания XMCL: кроссплатформенная установка, аутентификация Microsoft, офлайн-профили и миграция данных.',
+        status: 'READY // V0.56+',
+        accentColor: '#c9f85a',
+        items: [
+          {
+            id: 'install',
+            index: '01.1',
+            title: 'Руководство по установке',
+            desc: 'Пакеты для Windows (Installer / Portable), macOS, Linux (AppImage, Flathub) и Steam Deck',
+            link: `/${loc}/guide/install`,
+            badge: 'CRITICAL',
+          },
+          {
+            id: 'update',
+            index: '01.2',
+            title: 'Механизмы обновления',
+            desc: 'Автоматические обновления релизных каналов и ручная установка сборок',
+            link: `/${loc}/guide/update`,
+            badge: 'UPDATE',
+          },
+          {
+            id: 'offline-mode',
+            index: '01.3',
+            title: 'Офлайн-режим (Без лицензии)',
+            desc: 'Локальные независимые профили без обращения к серверам авторизации Microsoft',
+            link: `/${loc}/guide/offline-mode`,
+            badge: 'OFFLINE',
+          },
+          {
+            id: 'microsoft-login',
+            index: '01.4',
+            title: 'Аутентификация Microsoft и лицензии',
+            desc: 'Решение проблем входа, разграничение Java и Bedrock, токены OAuth',
+            link: `/${loc}/guide/microsoft-login-issues`,
+            badge: 'AUTH',
+          },
+          {
+            id: 'change-drive',
+            index: '01.5',
+            title: 'Перенос хранилища и смена диска',
+            desc: 'Безопасное перемещение директории лаунчера и игровых данных с системного диска C:',
+            link: `/${loc}/guide/change-drive`,
+            badge: 'STORAGE',
+          },
+          {
+            id: 'appx-migrate',
+            index: '01.6',
+            title: 'Миграция устаревшего пакета AppX',
+            desc: 'Бесшовный перенос данных из Windows Store пакета в классический формат',
+            link: `/${loc}/guide/appx-migrate`,
+            badge: 'MIGRATE',
+          },
+        ],
+      },
+      {
+        id: 'game-mods',
+        number: '02 / 04',
+        code: 'RUNTIME_ENG',
+        kicker: 'КОНФИГУРАЦИЯ СРЕДЫ',
+        title: 'Управление игрой и моды',
+        desc: 'Архитектура загрузчиков модов, изоляция инстансов, кастомизация интерфейса через CSS, скины и настройка AI Agent.',
+        status: 'LOADED // MODULAR',
+        accentColor: '#4ade80',
+        items: [
+          {
+            id: 'modloaders',
+            index: '02.1',
+            title: 'Загрузчики модов (Modloaders)',
+            desc: 'Архитектура и установка Forge, Fabric, Quilt, NeoForge и OptiFine',
+            link: `/${loc}/guide/modloader`,
+            badge: 'MODLOADER',
+          },
+          {
+            id: 'appearance',
+            index: '02.2',
+            title: 'Оформление и кастомный CSS движок',
+            desc: 'Полная кастомизация темы, прозрачность, стили и адаптивные интерфейсы',
+            link: `/${loc}/guide/appearance`,
+            badge: 'UI_CUSTOM',
+          },
+          {
+            id: 'big-picture',
+            index: '02.3',
+            title: 'Режим Big Picture и геймпады',
+            desc: 'Поддержка контроллеров Xbox, PlayStation, Switch, Steam Deck и интерфейс для ТВ',
+            link: `/${loc}/guide/big-picture`,
+            badge: 'GAMEPAD',
+          },
+          {
+            id: 'custom-skins',
+            index: '02.4',
+            title: 'Сторонние сервисы скинов',
+            desc: 'Отображение пользовательских скинов и плащей через Ely.by и LittleSkin',
+            link: `/${loc}/guide/custom-skins`,
+            badge: 'SKINS',
+          },
+          {
+            id: 'agnes-ai',
+            index: '02.5',
+            title: 'Встроенный AI Agent: Agnes AI',
+            desc: 'Бесплатный умный ассистент для диагностики крашей и управления модами',
+            link: `/${loc}/guide/agnes-ai-setup`,
+            badge: 'BUILTIN_AI',
+          },
+          {
+            id: 'ai-cloud-models',
+            index: '02.6',
+            title: 'Облачные модели ИИ (Gemini, ChatGPT...)',
+            desc: 'Подключение внешних API нейросетей Claude, Qwen, Z.ai с шифрованием ключей',
+            link: `/${loc}/guide/ai-cloud-models`,
+            badge: 'CLOUD_AI',
+          },
+          {
+            id: 'ai-local-models',
+            index: '02.7',
+            title: 'Локальные модели ИИ (Ollama, LM Studio)',
+            desc: 'Запуск нейросетей прямо на вашем ПК для 100% приватности без интернета',
+            link: `/${loc}/guide/ai-local-models`,
+            badge: 'LOCAL_AI',
+          },
+          {
+            id: 'manage-storage',
+            index: '02.8',
+            title: 'Изоляция данных и инстансы',
+            desc: 'Управление общим пулом ресурсов, жесткими ссылками и версиями игры',
+            link: `/${loc}/guide/manage`,
+            badge: 'INSTANCES',
+          },
+          {
+            id: 'bedrock',
+            index: '02.9',
+            title: 'Minecraft Bedrock Edition',
+            desc: 'Запуск и поддержка Bedrock параллельно с Java версиями в единой среде',
+            link: `/${loc}/guide/bedrock`,
+            badge: 'BEDROCK',
+          },
+        ],
+      },
+      {
+        id: 'multiplayer',
+        number: '03 / 04',
+        code: 'NET_P2P',
+        kicker: 'СЕТЕВОЙ СТЕК И ДИАГНОСТИКА',
+        title: 'Совместная игра и диагностика',
+        desc: 'Децентрализованная сетевая игра без белого IP, аналитика JVM-логов и быстрая диагностика сбоев и конфликтов модов.',
+        status: 'CONNECT // ONLINE',
+        accentColor: '#38bdf8',
+        items: [
+          {
+            id: 'together',
+            index: '03.1',
+            title: 'XMCL Together: Облачный мультиплеер',
+            desc: 'Совместная сетевая игра в 1 клик, общие серверы и управление сессиями без настройки роутера',
+            link: `/${loc}/guide/together`,
+            badge: 'TOGETHER',
+          },
+          {
+            id: 'p2p',
+            index: '03.2',
+            title: 'Прямая сетевая игра P2P (LAN)',
+            desc: 'Прямое туннелирование трафика между ПК без промежуточных серверов и сторонних утилит',
+            link: `/${loc}/guide/p2p`,
+            badge: 'P2P_MESH',
+          },
+          {
+            id: 'troubleshooting',
+            index: '03.3',
+            title: 'Диагностика сбоев и краш-логи',
+            desc: 'Анализ журналов JVM, ошибок видеодрайверов и выявление несовместимых модов',
+            link: `/${loc}/guide/troubleshooting`,
+            badge: 'FORENSICS',
+          },
+        ],
+      },
+      {
+        id: 'architecture-core',
+        number: '04 / 04',
+        code: 'CORE_SPEC',
+        kicker: 'СПЕЦИФИКАЦИЯ ЯДРА И МОДУЛИ',
+        title: 'Базовая документация ядра и API',
+        desc: 'Полная техническая документация модулей ядра @xmcl/*: запуск процессов JVM, сетевой протокол P2P, разработка и i18n.',
+        status: 'SOURCE // TYPESCRIPT',
+        accentColor: '#ff8060',
+        items: [
+          {
+            id: 'core-overview',
+            index: '04.1',
+            title: 'Core Document (Обзор архитектуры)',
+            desc: 'Генеральная спецификация и архитектура экосистемы модулей ядра @xmcl/*',
+            link: '/en/core/',
+            badge: 'CORE_API',
+          },
+          {
+            id: 'core-installer',
+            index: '04.2',
+            title: '@xmcl/installer (Модуль установки)',
+            desc: 'Автоматизированная загрузка и установка версий Minecraft, Forge, Fabric и Java',
+            link: '/en/core/installer',
+            badge: 'PACKAGE',
+          },
+          {
+            id: 'core-core',
+            index: '04.3',
+            title: '@xmcl/core (Ядро запуска JVM)',
+            desc: 'Управление процессами, аргументы JVM, запуск инстансов и конфигурация среды',
+            link: '/en/core/core',
+            badge: 'PACKAGE',
+          },
+          {
+            id: 'core-client',
+            index: '04.4',
+            title: '@xmcl/client (Сетевой клиент)',
+            desc: 'P2P подключение, обнаружение серверов в LAN, сигнальные протоколы и пинг',
+            link: '/en/core/client',
+            badge: 'PACKAGE',
+          },
+          {
+            id: 'core-mod-parser',
+            index: '04.5',
+            title: '@xmcl/mod-parser (Анализатор модов)',
+            desc: 'Извлечение метаданных из JAR-файлов, анализ манифестов Forge, Fabric и Quilt',
+            link: '/en/core/mod-parser',
+            badge: 'PACKAGE',
+          },
+          {
+            id: 'p2p-protocol',
+            index: '04.6',
+            title: 'Спецификация протоколов P2P',
+            desc: 'Форматы сообщений, сигнализация через STUN/TURN и безопасность передачи пакетов',
+            link: `/${loc}/protocol/p2p`,
+            badge: 'PROTOCOL',
+          },
+          {
+            id: 'contributing',
+            index: '04.7',
+            title: 'Руководство разработчика (Contributing)',
+            desc: 'Настройка окружения, локальная компиляция проекта и оформление Pull Request',
+            link: `/${loc}/guide/contributing`,
+            badge: 'DEV_GUIDE',
+          },
+          {
+            id: 'i18n',
+            index: '04.8',
+            title: 'Локализация и перевод (i18n)',
+            desc: 'Добавление и синхронизация словарей перевода лаунчера на ваш родной язык',
+            link: `/${loc}/guide/i18n`,
+            badge: 'LOCALIZATION',
+          },
+        ],
+      },
+    ]
+  }
   if (isUk.value) {
     return [
       {
@@ -599,6 +873,74 @@ const blocks = computed<DocBlock[]>(() => {
     },
   ]
 })
+
+const t = computed(() => {
+  if (isUk.value) {
+    return {
+      kicker: 'ТЕХНІЧНА СПЕЦИФІКАЦІЯ XMCL',
+      titleLight: 'АРХІТЕКТУРА ТА',
+      titleStrong: 'ДОКУМЕНТАЦІЯ',
+      lead: 'Офіційний довідковий центр лаунчера: посібники з розгортання, ізоляція модифікацій, P2P mesh-мережі, діагностика краш-логів та документація ядра @xmcl/*.',
+      searchLabel: 'Пошук по всій документації',
+      searchPlaceholder: 'Пошук статей, параметрів JVM, модулів ядра, помилок...',
+      quickFlags: 'ШВИДКИЙ ВИКЛИК:',
+      indexRegister: 'ІНДЕКС / РЕЄСТР',
+      module: 'МОДУЛЬ',
+      viewSpecs: 'ВІДКРИТИ РОЗДІЛ',
+      discordKicker: 'СПІЛЬНОТА ТА ПІДТРИМКА',
+      discordTitle: 'Офіційний сервер Discord',
+      discordDesc: 'Приєднуйтесь до каналів розробників та спільноти гравців: обговорення модів, вирішення мережевих збоїв та технічна допомога онлайн.',
+      discordBtn: 'ПРИЄДНАТИСЯ В DISCORD',
+      repoKicker: 'ВІДКРИТИЙ РЕПОЗИТОРІЙ ДОКУМЕНТАЦІЇ',
+      repoTitle: 'Співавторство документації',
+      repoDesc: 'Документація створюється спільнотою у відкритому репозиторії. Ви можете виправити помилку, доповнити статтю або додати новий матеріал.',
+      repoBtn: 'ВІДКРИТИ РЕПОЗИТОРІЙ GITHUB',
+    }
+  }
+  if (isRu.value) {
+    return {
+      kicker: 'ТЕХНИЧЕСКАЯ СПЕЦИФИКАЦИЯ XMCL',
+      titleLight: 'АРХИТЕКТУРА И',
+      titleStrong: 'ДОКУМЕНТАЦИЯ',
+      lead: 'Официальный справочный центр лаунчера: руководства по развертыванию, изоляция модификаций, P2P mesh-сети, диагностика краш-логов и документация ядра @xmcl/*.',
+      searchLabel: 'Поиск по всей документации',
+      searchPlaceholder: 'Поиск статей, параметров JVM, модулей ядра, ошибок...',
+      quickFlags: 'БЫСТРЫЙ ВЫЗОВ:',
+      indexRegister: 'ИНДЕКС / РЕЕСТР',
+      module: 'МОДУЛЬ',
+      viewSpecs: 'ОТКРЫТЬ РАЗДЕЛ',
+      discordKicker: 'СООБЩЕСТВО И ПОДДЕРЖКА',
+      discordTitle: 'Официальный сервер Discord',
+      discordDesc: 'Присоединяйтесь к каналам разработчиков и сообщества: обсуждение модов, решение сетевых проблем и техническая помощь онлайн.',
+      discordBtn: 'ПРИСОЕДИНИТЬСЯ В DISCORD',
+      repoKicker: 'ОТКРЫТЫЙ РЕПОЗИТОРИЙ ДОКУМЕНТАЦИИ',
+      repoTitle: 'Соавторство документации',
+      repoDesc: 'Документация создается сообществом в открытом репозитории. Вы можете исправить ошибку, дополнить статью или сделать перевод.',
+      repoBtn: 'ОТКРЫТЬ РЕПОЗИТОРИЙ GITHUB',
+    }
+  }
+  return {
+    kicker: 'XMCL TECHNICAL SPECIFICATION',
+    titleLight: 'ARCHITECTURE &',
+    titleStrong: 'DOCUMENTATION',
+    lead: 'The comprehensive manual for launcher deployment, instance orchestration, peer-to-peer mesh networking, crash forensics, and the @xmcl TypeScript core engine.',
+    searchLabel: 'Search all documentation',
+    searchPlaceholder: 'Search guides, JVM parameters, core modules, error codes...',
+    quickFlags: 'QUICK_FLAGS:',
+    indexRegister: 'INDEX / REGISTER',
+    module: 'MODULE',
+    viewSpecs: 'VIEW MODULE SPECS',
+    discordKicker: 'PEER NETWORK & SUPPORT',
+    discordTitle: 'Community Discord Relay',
+    discordDesc: 'Join the core developers and player community for mod troubleshooting, live P2P network diagnostics, and real-time guidance.',
+    discordBtn: 'CONNECT TO DISCORD',
+    repoKicker: 'OPEN DOCUMENTATION SOURCE',
+    repoTitle: 'Contribute to Documentation',
+    repoDesc: 'XMCL documentation is entirely open-source. Help us improve guides, fix typos, submit architectural updates, or translate into new locales.',
+    repoBtn: 'OPEN GITHUB REPOSITORY',
+  }
+})
+
 </script>
 
 <template>
@@ -608,7 +950,7 @@ const blocks = computed<DocBlock[]>(() => {
       <div class="hub-status-strip">
         <div class="hub-kicker-badge">
           <span class="hub-pulse-dot" aria-hidden="true"></span>
-          <span class="hub-kicker-text">{{ isUk ? 'ТЕХНІЧНА СПЕЦИФІКАЦІЯ XMCL' : 'XMCL TECHNICAL SPECIFICATION' }}</span>
+          <span class="hub-kicker-text">{{ t.kicker }}</span>
         </div>
         <div class="hub-version-tag">
           <span class="hub-tag-prefix">BUILD:</span>
@@ -618,15 +960,11 @@ const blocks = computed<DocBlock[]>(() => {
 
       <div class="hub-hero-headline">
         <h1 class="hub-title">
-          <span class="hub-title-light">{{ isUk ? 'АРХІТЕКТУРА ТА' : 'ARCHITECTURE &' }}</span>
-          <span class="hub-title-strong">{{ isUk ? 'ДОКУМЕНТАЦІЯ' : 'DOCUMENTATION' }}</span>
+          <span class="hub-title-light">{{ t.titleLight }}</span>
+          <span class="hub-title-strong">{{ t.titleStrong }}</span>
         </h1>
         <p class="hub-lead">
-          {{
-            isUk
-              ? 'Офіційний довідковий центр лаунчера: посібники з розгортання, ізоляція модифікацій, P2P mesh-мережі, діагностика краш-логів та документація ядра @xmcl/*.'
-              : 'The comprehensive manual for launcher deployment, instance orchestration, peer-to-peer mesh networking, crash forensics, and the @xmcl TypeScript core engine.'
-          }}
+          {{ t.lead }}
         </p>
       </div>
 
@@ -645,13 +983,13 @@ const blocks = computed<DocBlock[]>(() => {
         <button
           type="button"
           class="hub-terminal-input-btn"
-          :aria-label="isUk ? 'Пошук по всій документації' : 'Search all documentation'"
+          :aria-label="t.searchLabel"
           @click="openSearchModal"
         >
           <div class="hub-input-inner">
             <span class="hub-cli-prompt">user@xmcl:~$</span>
             <span class="hub-cli-cmd">query-docs</span>
-            <span class="hub-cli-placeholder">{{ isUk ? 'Пошук статей, параметрів JVM, модулів ядра, помилок...' : 'Search guides, JVM parameters, core modules, error codes...' }}</span>
+            <span class="hub-cli-placeholder">{{ t.searchPlaceholder }}</span>
             <span class="hub-cli-cursor">_</span>
           </div>
           <div class="hub-shortcut-keys" aria-hidden="true">
@@ -663,7 +1001,7 @@ const blocks = computed<DocBlock[]>(() => {
 
         <!-- Command Flags Strip -->
         <div class="hub-flags-row">
-          <span class="hub-flags-label">{{ isUk ? 'ШВИДКИЙ ВИКЛИК:' : 'QUICK_FLAGS:' }}</span>
+          <span class="hub-flags-label">{{ t.quickFlags }}</span>
           <div class="hub-flags-list">
             <a
               v-for="item in quickFlags"
@@ -712,8 +1050,8 @@ const blocks = computed<DocBlock[]>(() => {
         <!-- Articles Register -->
         <div class="quadrant-register">
           <div class="register-header">
-            <span>{{ isUk ? 'ІНДЕКС / РЕЄСТР' : 'INDEX / REGISTER' }}</span>
-            <span>{{ isUk ? 'МОДУЛЬ' : 'MODULE' }}</span>
+            <span>{{ t.indexRegister }}</span>
+            <span>{{ t.module }}</span>
           </div>
 
           <div class="register-list">
@@ -809,7 +1147,7 @@ const blocks = computed<DocBlock[]>(() => {
             rel="noopener noreferrer"
             class="console-btn"
           >
-            <span>{{ isUk ? 'ВІДКРИТИ РЕПОЗИТОРІЙ GITHUB' : 'OPEN GITHUB REPOSITORY' }}</span>
+            <span>{{ t.repoBtn }}</span>
             <span class="console-btn-plus">+</span>
           </a>
         </div>

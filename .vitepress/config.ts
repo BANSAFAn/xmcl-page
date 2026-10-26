@@ -7,6 +7,9 @@ import { LocaleConfig, defineConfigWithTheme } from 'vitepress'
 import type { HeadConfig } from 'vitepress'
 import { DefaultTheme } from 'vitepress/theme'
 import { loadTheme } from './themeHelper'
+import { ensureGuideFallbacks } from './guideFallbacks'
+
+ensureGuideFallbacks()
 import { imagetools } from 'vite-imagetools'
 
 const src = resolve(__dirname, '../src')
