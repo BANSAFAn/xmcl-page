@@ -1,8 +1,13 @@
 import { existsSync, readFileSync, readdirSync } from "fs";
-import { join } from "path";
+import { dirname, join, resolve } from "path";
+import { fileURLToPath } from "url";
 import { DefaultTheme, LocaleConfig } from "vitepress";
 import { parse } from 'yaml';
 import { ensureGuideFallbacks } from "./guideFallbacks";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const projectRoot = resolve(__dirname, '..');
 
 export function loadSidebarSection(location: string, locale: string, type: string) {
     try {
@@ -46,7 +51,7 @@ function getChangelogsFiles(location: string) {
 }
 
 function loadCorePackages(): DefaultTheme.SidebarItem[] {
-    const coreSidebarPath = join(__dirname, '..', 'src', 'en', 'core', 'sidebar.json')
+    const coreSidebarPath = resolve(projectRoot, 'src', 'en', 'core', 'sidebar.json')
     if (!existsSync(coreSidebarPath)) {
         return []
     }
@@ -75,7 +80,7 @@ function loadCorePackages(): DefaultTheme.SidebarItem[] {
 
 export function loadTheme(location: string, locale: string) {
     ensureGuideFallbacks();
-    const localeFile = join(__dirname, '..', 'locales', locale + '.yml')
+    const localeFile = resolve(projectRoot, 'locales', locale + '.yml')
     const localeMessages = parse(readFileSync(localeFile, 'utf-8'))
     const sidebar: DefaultTheme.SidebarMulti = {}
 

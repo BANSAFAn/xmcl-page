@@ -169,6 +169,13 @@ body:not(:has(.xmcl-modern)):not(:has(.xmcl-legacy)) .VPNavScreenMenuLink {
 body:not(:has(.xmcl-modern)):not(:has(.xmcl-legacy)) .VPSidebar {
   background: var(--xmcl-paper) !important;
   border-right: 1px solid var(--xmcl-line) !important;
+  z-index: 20 !important;
+}
+
+.VPSidebar,
+.VPSidebar .nav {
+  padding-bottom: 240px !important;
+  box-sizing: border-box !important;
 }
 
 body:not(:has(.xmcl-modern)):not(:has(.xmcl-legacy)) .VPSidebarItem .item .link {
@@ -410,7 +417,8 @@ html.dark body:has(.blog-article-wrapper) .VPDocAsideOutline .outline-link.activ
 }
 
 @media (min-width: 960px) {
-  .has-sidebar .site-footer {
+  .has-sidebar .site-footer,
+  .has-sidebar .site-doc-footer {
     padding-left: calc(var(--vp-sidebar-width, 272px) + clamp(24px, 4vw, 64px)) !important;
   }
 }
